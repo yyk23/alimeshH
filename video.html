@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta charset="UTF-8">
+    <title>教学视频</title>
+    <link rel="stylesheet" href="css/weui.min.css?v=7">
+    <link rel="stylesheet" href="css/homi.css?v=14">
+    <style>
+	h2 {text-align:center; line-height:2; margin-top:.5em; color: #22b9ec}
+	.tc {text-align:center;}
+	.page__ft {text-align:center; padding: 3em 0 1em; color: #999;font-size: .8em;}
+    </style>
+</head>
+<body class="weui-background">
+<div style="flex-direction: row">
+
+<div class="page">
+    <div class="page__hd">
+
+
+        <h2 class="page__title">开关精灵使用视频</h2>
+
+
+	<div id="vedio_area">
+	    <div class="weui-flex weui_flex_top">
+		<div class="weui-flex__item">
+		    <div class="vedio_box">
+			<video style="display: none" id="vedio" src="videos/full_720.mp4" onended="guide();" controls="controls" preload="preload" class="video" playsinline="true" webkit-playsinline="true"></video>
+			<img onclick="play()" id="pick" src="image/video@3x.png" width="100%" height="100%">
+		    </div>
+		</div>
+	    </div>
+	</div>
+	<div class="tc" style="color:#c5c5c5;font-size:.8em; line-height:2.8em;">如无法播放,请使用浏览器打开</div>
+
+
+
+	<div class="weui-cells__title">视频包含以下几部分</div>
+	<div class="weui-cells">
+            <a class="weui-cell weui-cell_access" href="javascript:;">
+                <div class="weui-cell__bd">
+                    <p>1. 开箱: 配件及整体功能介绍, 胶条使用方法;</p>
+                </div>
+            </a>
+            <a class="weui-cell weui-cell_access" href="javascript:;">
+                <div class="weui-cell__bd">
+	 	    <p>2. 配对: 与天猫精灵的配对及异常处理;</p>
+                </div>
+            </a>
+
+            <a class="weui-cell weui-cell_access" href="javascript:;">
+                <div class="weui-cell__bd">
+	 	    <p>3. 校准: 从APP进入校准页面及校准过程;</p>
+                </div>
+            </a>
+
+            <a class="weui-cell weui-cell_access" href="javascript:;">
+                <div class="weui-cell__bd">
+	 	    <p>4. 语音交互: 与天猫精灵的语音交互;</p>
+                </div>
+            </a>
+
+            <a class="weui-cell weui-cell_access" href="javascript:;">
+                <div class="weui-cell__bd">
+	 	    <p>5. 修改分类: 开关分类更改与更改后语音交互.</p>
+                </div>
+            </a>
+        </div>
+	<div class="tc" style="color:#c5c5c5;font-size:.8em; line-height:2.8em;">
+	   暂无天猫精灵的用户，可先用Roome APP进行控制
+ 	</div>
+
+
+
+	<div class="page__ft">
+	   北京毫米科技有限公司
+	</div>
+
+
+    </div>
+</div>
+
+
+</div>
+<script type="application/javascript" src="https://g.alicdn.com/mtb/lib-windvane/2.1.8/windvane.js"></script>
+<script type="application/javascript" src="js/jquery.js"></script>
+<script type="application/javascript" src="js/weui.min.js"></script>
+<script type="application/javascript" src="js/lottie.min.js"></script>
+<script type="application/javascript" src="js/util.js?v=3"></script>
+<script>
+    function play() {
+        var vedio = document.getElementById("vedio");
+        $("#pick").hide();
+        $(vedio).show();
+        vedio.play();
+    }
+</script>
+</body>
+</html>

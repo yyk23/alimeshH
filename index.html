@@ -1,0 +1,2896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta charset="UTF-8">
+    <title>设备设置</title>
+    <link rel="stylesheet" href="css/weui.min.css?v=1356">
+    <link rel="stylesheet" href="css/homi.css?v=1374">
+</head>
+<body class="weui-background">
+<div style="flex-direction: row">
+    <div class="weui-flex nav_bar">
+        <div class="weui-flex__item level-left vertical-bottom" onclick="back();">
+            <span class="nav_bar_txt"><img src="image/back@3x.png" class="nav_bar_img"></span>
+        </div>
+        <div class="weui-flex__item vertical-bottom">
+            <span class="nav_bar_txt">设备设置</span>
+        </div>
+        <div class="weui-flex__item">
+            &nbsp;
+        </div>
+    </div>
+    <div id="noparam" style="display: none">
+        <div class="weui-flex weui-flex__center">
+            <div class="weui-flex__item">
+                <span class="status_txt">没有待连接设备</span>
+            </div>
+        </div>
+    </div>
+    <div id="vedio_area" style="display:none;">
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="vedio_box">
+                    <video style="display: none" id="vedio"
+                           controls="controls" src="http://homi-img.oss-cn-beijing.aliyuncs.com/alimesh720.mp4"
+                           preload="none" class="video" onended=    "endFunc();" playsinline="true" webkit-playsinline="true"></video>
+                    <img onclick="play()" id="pick"  src="image/video@3x.png" width="100%" height="100%">
+                </div>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <span class="no_desc" style="margin-top: 20px;">
+                    由于国内开关按键高度和尺寸的不同，为更好的适配您家的开关按键，请在首次使用或按键工作异常时，根据上述视频演示完成按键校准工作。否则开关精灵可能无法正常使用。</span>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <span class="no_desc" style="margin-top: 20px">校准结果以可清晰按下对应按键，并且开关精灵无翘起或移动为最佳。</span>
+            </div>
+        </div>
+        <!--<div class="weui-flex">
+            <div class="weui-flex__item">
+                <div id="jchk"
+                     class="status_weui-cells weui-cells weui-cells_checkbox calibrate_checkbox weui-cells_chkbox jchk">
+                    <label class="weui-cell weui-check__label" for="jvalue">
+                        <div class="weui-cell__hd" style="display: flex">
+                            <input type="checkbox" class="weui-check" value="1" name="jvalue" id="jvalue"/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p class="calibrate_chktxt">已看完视频</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>-->
+        <div class="weui-flex">
+            <div class="weui-flex__item vertical-bottom">
+                <button class="weui-btn_custom jump" style="margin:9px 0px 0px 0px;" id="jump" onclick="guide()" disabled="disabled">&nbsp;</button>
+            </div>
+        </div>
+    </div>
+    <div id="content" style="display: none;">
+        <div class="weui-cells__title">基础设置</div>
+        <div class="weui-cells weui-cells_after-title">
+            <a href="javascript:void(0);" onclick="setType()" class="weui-cell weui-cell_access"
+               hover-class="weui-cell_active">
+                <div class="weui-cell__bd">开关类型设置</div>
+                <div class="weui-cell__ft weui-cell__ft_in-access" id="keytype"></div>
+            </a>
+            <a href="javascript:void(0);" onclick="setStatus()" class="weui-cell weui-cell_access"
+               hover-class="weui-cell_active">
+                <div class="weui-cell__bd">开灯方向设置</div>
+                <div class="weui-cell__ft weui-cell__ft_in-access" id="keystatus"></div>
+            </a>
+            <a href="javascript:void(0);" onclick="setCalibration();" class="weui-cell weui-cell_access"
+               hover-class="weui-cell_active">
+                <div class="weui-cell__bd">开关按键校准</div>
+                <div class="weui-cell__ft weui-cell__ft_in-access" id="keycalibrate">未校准</div>
+            </a>
+        </div>
+        <div class="weui-cells__title">高级设置</div>
+        <div class="weui-cells weui-cells_after-title">
+            <a href="javascript:void (0);" onclick="setPanel();" class="weui-cell weui-cell_access"
+               hover-class="weui-cell_active">
+                <div class="weui-cell__bd">面板操作方式</div>
+                <div class="weui-cell__ft weui-cell__ft_in-access" id="keymode"></div>
+            </a>
+            <a href="javascript:void(0);" onclick="setDistance()" class="weui-cell weui-cell_access"
+               hover-class="weui-cell_active">
+                <div class="weui-cell__bd">蓝牙控制距离</div>
+                <div class="weui-cell__ft weui-cell__ft_in-access" id="distance"></div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!--开关状态-->
+<div id="keyStatusArea" style="display: none">
+    <div class='weui-flex weui_flex_top' onclick="areaClick('2')">
+        <div class='weui-flex__item'>
+            <div class='box'>
+                <div class='weui-flex'>
+                    <div class='weui-flex__item status_txt vertical-center'>
+                        按上方开灯
+                    </div>
+                    <div class='weui-flex__item level-right'>
+                        <div class='status_weui-cells weui-cells_checkbox'>
+                            <label class='weui-cell weui-check__label weui-cell_chk' for='up'>
+                                <div class='weui-cell__hd'>
+                                    <input type='radio' class='weui-check' disabled="disabled" value='1'
+                                           name='keystatus' id='up'/>
+                                    <i class='weui-icon-checked'></i>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-flex status_switch">
+                    <div class='weui-flex__item vertical-center box_three_left'>
+                        <img class='img_key' src='image/switch_state_card_icon_second_left_n@3x.png'>
+                    </div>
+                    <div class='weui-flex__item vertical-center box_three_right'>
+                        <img class='img_key' src='image/switch_state_card_icon_second_right_n@3x.png'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='weui-flex weui_flex_top' onclick="areaClick('1')">
+        <div class='weui-flex__item'>
+            <div class='box'>
+                <div class='weui-flex'>
+                    <div class='weui-flex__item status_txt vertical-center'>
+                        按下方开灯<span class='status_default vertical-center level-center'>默认</span>
+                    </div>
+                    <div class='weui-flex__item level-right'>
+                        <div class='status_weui-cells weui-cells_checkbox'>
+                            <label class='weui-cell weui-check__label weui-cell_chk' for='down'>
+                                <div class='weui-cell__hd'>
+                                    <input type='radio' class='weui-check' disabled="disabled" value='0'
+                                           name='keystatus'
+                                           id='down'/>
+                                    <i class='weui-icon-checked'></i>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-flex status_switch">
+                    <div class='weui-flex__item vertical-center box_three_left'>
+                        <img class='img_key' src='image/switch_state_card_icon_first_left_n@3x.png'>
+                    </div>
+                    <div class='weui-flex__item vertical-center box_three_right'>
+                        <img class='img_key' src='image/switch_state_card_icon_first_right_n@3x.png'>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class='weui-flex weui_flex_top'>
+        <div class='weui-flex__item '>
+            <div class='status_desc'>注：此设置将应用到开关的全部按键。</div>
+
+        </div>
+    </div>
+    <div class='weui-flex weui_flex_top'>
+        <div class='weui-flex__item '>
+            <button type="button" id="status_finish" class="weui-btn_custom">完成</button>
+        </div>
+    </div>
+</div>
+
+<!--开关类型-->
+<div id="keyTypeArea" style="display: none">
+    <div class="weui-flex weui_flex_top" onclick="areaClick('3')">
+        <div class="weui-flex__item">
+            <div class="box">
+                <div class="weui-flex">
+                    <div class="weui-flex__item status_txt vertical-center">
+                        普通开关<span class="status_default vertical-center level-center">默认</span>
+                    </div>
+                    <div class="weui-flex__item level-right">
+                        <div class="status_weui-cells weui-cells_checkbox">
+                            <label class="weui-cell weui-check__label weui-cell_chk" for="default">
+                                <div class="weui-cell__hd">
+                                    <input type="radio" class="weui-check" disabled="disabled" value="1" name="keytype"
+                                           id="default"/>
+                                    <i class="weui-icon-checked"></i>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="weui-flex switch">
+                    <div class="weui-flex__item vertical-center box_three_left">
+                        <img class="img_key" src="image/switch_type_card_icon_first_left_n@3x.png">
+                    </div>
+                    <div class="weui-flex__item vertical-center box_three_right">
+                        <img class="img_key" src="image/switch_type_card_icon_first_right_n@3x.png">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="weui-flex weui_flex_top" onclick="areaClick('4')">
+        <div class="weui-flex__item">
+            <div class="box">
+                <div class="weui-flex">
+                    <div class="weui-flex__item status_txt vertical-center">
+                        自复位开关
+                    </div>
+                    <div class="weui-flex__item level-right">
+                        <div class="status_weui-cells weui-cells_checkbox">
+                            <label class="weui-cell weui-check__label weui-cell_chk" for="auto">
+                                <div class="weui-cell__hd">
+                                    <input type="radio" class="weui-check" disabled="disabled" value="2" name="keytype"
+                                           id="auto"/>
+                                    <i class="weui-icon-checked"></i>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-flex switch">
+                    <div class="weui-flex__item vertical-center box_three_left">
+                        <img class="img_key" src="image/switch_type_card_icon_second_left_n@3x.png">
+                    </div>
+                    <div class="weui-flex__item vertical-center box_three_right">
+                        <img class="img_key" src="image/switch_type_card_icon_second_right_n@3x.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="weui-flex weui_flex_top">
+        <div class="weui-flex__item ">
+            <div class="status_desc">注：此设置将应用到开关的全部按键。</div>
+
+        </div>
+    </div>
+    <div class='weui-flex weui_flex_top'>
+        <div class='weui-flex__item '>
+            <button type="button" id="type_finish" class="weui-btn_custom">完成</button>
+        </div>
+    </div>
+</div>
+
+
+<!---通信距离--->
+
+<div id="distanceArea" style="display: none">
+    <div class="weui-flex">
+        <div class="weui-flex__item level-left vertical-center">
+            <div class="weui-cells__title weui-title"><!--<span class="dis_title">选择控制距离</br></span>-->
+                <span class="dis_desc">根据开关精灵的使用环境，选择合适的蓝牙控制距离。</span></div>
+        </div>
+    </div>
+    <div class="weui-flex">
+        <div class="weui-flex__item">
+            <div class="dis_weui-cells weui-cells weui-cells_radio distance_body">
+                <label class="weui-cell weui-check__label" for="small">
+                    <div class="dis_weui-cell__hd">
+                        <img class="dis_img" src="image/switch_communication_icon_first_n@3x.png">
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p class="dis_title">省电模式</p>
+                        <p class="dis_desc dis_radio">适用于约20-50㎡</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check" name="distance" value="1" id="small">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+                <label class="weui-cell weui-check__label" for="middle">
+                    <div class="dis_weui-cell__hd">
+                        <img class="dis_img" src="image/switch_communication_icon_second_n@3x.png">
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p class="dis_title">常用模式</p>
+                        <p class="dis_desc dis_radio">适用于约50-80㎡</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check" name="distance" value="2" id="middle">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+                <label class="weui-cell weui-check__label" for="large">
+                    <div class="dis_weui-cell__hd">
+                        <img class="dis_img" src="image/switch_communication_icon_third_n@3x.png">
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p class="dis_title">增强模式</p>
+                        <p class="dis_desc dis_radio">适用于约80-120㎡</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check" name="distance" value="3" id="large">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="weui-flex weui-flex__txt_top">
+        <div class="weui-flex__item ">
+            <div class="distance_last_txt">以上数据由北京毫米科技有限公司在测试环境下完成，仅供参考，实际控制范围以使用环境为准。</div>
+
+        </div>
+    </div>
+    <div class='weui-flex weui_flex_top'>
+        <div class='weui-flex__item'>
+            <button type="button" id="dis_finish" class="weui-btn_custom">完成</button>
+        </div>
+    </div>
+</div>
+
+
+<!----面板操作方式--->
+
+<div id="panelArea" style="display: none">
+    <div class="weui-flex">
+        <div class="weui-flex__item ">
+            <div class="dis_weui-cells weui-cells weui-cells_radio">
+                <label class="weui-cell weui-check__label" for="touch">
+                    <div class="weui-cell__bd panel_radio">触摸</div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check" name="mode" value="0" id="touch">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+                <label class="weui-cell weui-check__label" for="click">
+                    <div class="weui-cell__bd panel_radio">按下</div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check" name="mode" value="1" id="click">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="weui-flex panel_line-height distance_last_txt">
+        <div class="weui-flex__item">
+            <table width="100%">
+                <tr>
+                    <td rowspan="3" width="22%" valign="top" align="right" class="txt_left">开/关灯:</td>
+                    <td id="typeDesc">触摸对应按键</td>
+                </tr>
+                <tr>
+                    <td>(开灯-蓝色指示灯常亮2秒; 注: 如电量低为红灯)</td>
+                </tr>
+                <tr>
+                    <td>(关灯-蓝色指示灯闪烁1次; 注: 如电量低为红灯)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="weui-flex panel_line-height distance_last_txt">
+        <div class="weui-flex__item">
+            <table width="100%">
+                <tr>
+                    <td rowspan="3" width="22%" valign="top" align="right" class="txt_left">开/关机:</td>
+                    <td>按下任意键3秒</td>
+                </tr>
+                <tr>
+                    <td>(开机-蓝色指示灯闪烁时松手)</td>
+                </tr>
+                <tr>
+                    <td>(关机-红色指示灯闪烁时松手)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="weui-flex panel_line-height distance_last_txt">
+        <div class="weui-flex__item">
+            <table width="100%">
+                <tr>
+                    <td rowspan="2" width="22%" valign="top" align="right" class="txt_left">蓝牙配对:</td>
+                    <td>按下任意键7秒或单击背面的Reset键</td>
+                </tr>
+                <tr>
+                    <td>(蓝红灯交替闪烁时松手进入蓝牙配对)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class='weui-flex weui_flex_top'>
+        <div class='weui-flex__item '>
+            <button type="button" id="mode_finish" class="weui-btn_custom">完成</button>
+        </div>
+    </div>
+
+</div>
+
+
+<!---校准--->
+<div id="calibrateArea" style="display: none">
+    <div id="guide">
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="weui-text calibrate_desc">请正确安装开关精灵</span>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <span class="weui-text calibrate_txt">先将原开关清洁晾干，再将软胶条对齐原开关的上下两端边缘粘贴并压紧后，吸附上产品。<br/>请调整位置，同原开关上下左右居中对齐。</span>
+            </div>
+        </div>
+        <div class="weui-flex" style="margin-top:5.9vw">
+            <div class="weui-flex__item">
+                <img class="img_middle" src="image/switch_calibration_icon_n@3x.png">
+            </div>
+        </div>
+        <div class="weui-flex" style="margin-top: 5px">
+            <div class="weui-flex__item">
+                <div class="status_weui-cells weui-cells weui-cells_checkbox calibrate_checkbox weui-cells_chkbox">
+                    <label class="weui-cell weui-check__label" for="vali">
+                        <div class="weui-cell__hd" style="display: flex">
+                            <input type="checkbox" class="weui-check" value="1" name="vali" id="vali"/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p class="calibrate_chktxt">已正确安装</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="weui-flex" style="margin-top: 5px">
+            <div class="weui-flex__item">
+                <button class="weui-btn_custom" type="button" id="guide_btn" disabled="disabled">开始按键校准向导</button>
+            </div>
+        </div>
+        <div class="weui-flex" style="margin-top: 11px">
+            <div class="weui-flex__item">
+                <button class="btn_hand" type="button" disabled="disabled" id="fControl">手动按键校准(高级)</button>
+            </div>
+        </div>
+    </div>
+    <div id="start" style="display: none">
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="weui-text calibrate_desc" id="panel_desc">从下方选择按键</span>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+        <span class="weui-text calibrate_txt" id="panel_txt">按键校准过程共分三步，大约需要30秒。</br>
+            请按屏幕提示进行操作。</span>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="start_background_img">
+                    <div class="weui-flex">
+                        <div class="weui-flex__item start_key_area">
+                            <div id="left_key" style="display: none" class="weui-flex__item start_key_txt vertical-top">
+                    <span class="start_key" id="leftkey" onclick="setCurrKey('1')">
+                        <img class="start_img" src="image/switch_choose_button_n.png"></br>选择<br/>左键</span>
+                            </div>
+                            <div class="line_area start_key_txt" style="display: none" id="first_line">
+                                <img class="line" src="image/swith_icon_line@3x.png">
+                            </div>
+                            <div class="weui-flex__item start_key_txt vertical-top" style="display: none" id="middle_key">
+                    <span class="start_key" id="middlekey" onclick="setCurrKey('2');">
+                        <img class="start_img" src="image/switch_choose_button_n.png"></br>选择<br/>中键</span>
+                            </div>
+                            <div class="line_area start_key_txt" id="second_line">
+                                <img class="line" src="image/swith_icon_line@3x.png">
+                            </div>
+                            <div class="weui-flex__item start_key_txt vertical-top" id="right_key" style="display: none">
+                    <span class="start_key" id="rightkey" onclick="setCurrKey('3')">
+                        <img class="start_img" src="image/switch_choose_button_n.png"></br>选择<br/>右键</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <span class="note">注意：从上方选择，请勿点击实体按键！</span>
+            </div>
+        </div>
+
+        <div class="weui-flex" id="sync" style="display: none">
+            <div class="weui-flex__item">
+                <div class="status_weui-cells weui-cells weui-cells_checkbox calibrate_checkbox weui-cells_chkbox">
+                    <label class="weui-cell weui-check__label" for="syncchk">
+                        <div class="weui-cell__hd" style="display: flex">
+                            <input type="checkbox" class="weui-check" value="1" name="syncchk" id="syncchk"/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p class="calibrate_chktxt">将校准高度同步到其他按键</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="weui-flex" id="finish_area" style="display: none">
+            <div class="weui-flex__item">
+                <button class="weui-btn_custom" id="start_btn" type="button">开始校准</button>
+            </div>
+        </div>
+        <div class="weui-flex" style="display: none">
+            <div class="weui-flex__item">
+                <button class="weui-btn_custom" id="hControl" type="button">开始校准</button>
+            </div>
+        </div>
+        <div class="weui-flex" id="finish_ara" style="display: none">
+            <div class="weui-flex__item">
+                <button class="weui-btn_custom" id="finish_btn" type="button" onclick="syncAngle();">完成</button>
+            </div>
+        </div>
+    </div>
+    <div id="first" style="display: none">
+        <div class="weui-flex" style="margin-top: 20px;">
+            <div class="weui-flex__item">
+                <span class="weui-text calibrate_desc" id="clickStep">第一步: 校准按键一端</span>
+            </div>
+        </div>
+        <div class="weui-flex" style="margin-top: 25px;margin-bottom: 30px;">
+            <div class="weui-flex__item">
+                <div class="option_panel">
+                    <div class="option_key weui-flex">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <span class="weui-text option_desc" id="clickStart">按住下方按钮，开始校准</span>
+            </div>
+        </div>
+        <div class="weui-flex" style="margin-top: 5px;">
+            <div class="weui-flex__item">
+                <span class="weui-text option_txt" id="click_desc">当原开关按键状态变化时，松开下方按钮...</span>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div id="dw_btn" class="dw_btn" style="display: none">
+                </div>
+                <div class="dw_btn dw_btn_img" id="static"><span class="click_txt">按住<br/>开始</span>
+                    <div class="dw_btn_ok" style="display: none">
+                        <div id="ok_key" class="option_ok_key"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="second" style="display: none"></div>
+    <div id="test" style="display: none">
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <img class="blub" id="blub" src="image/index_dev_bulb_gray.png">
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <span id="opstatus">关闭</span>
+            </div>
+        </div>
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <div class="btn_area">
+                    <div class="slider_area">
+                        <div class="click_btn" id="btn_block"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="weui_flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="test_desc">受控灯具当前状态为</span>
+            </div>
+        </div>-->
+        <div class="weui-flex">
+            <div class="weui-flex__item onoff_three_left">
+                <div class="status_weui-cells weui-cells weui-cells_checkbox calibrate_checkbox weui-cells_chkbox">
+                    <label class="weui-cell weui-check__label" for="clickdw">
+                        <div class="weui-cell__hd">
+                            <input type="radio" class="weui-check" value="0" name="openStatus" id="clickdw"/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p class="">按下方开灯</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="weui-flex__item onoff_three_right">
+                <div class="status_weui-cells weui-cells weui-cells_checkbox calibrate_checkbox weui-cells_chkbox">
+                    <label class="weui-cell weui-check__label" for="clickup">
+                        <div class="weui-cell__hd">
+                            <input type="radio" class="weui-check" value="1" name="openStatus" id="clickup"/>
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p class="">按上方开灯</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <button type="button" class="weui-btn_custom" id="finish_two" onclick="syncPage('a');"
+                        disabled="disabled">
+                    点击上方按键，验证结果
+                </button>
+            </div>
+        </div>
+        <!--<div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item" onclick="again()">
+                测试不满意，重新校准
+            </div>
+        </div>-->
+    </div>
+    <!--content: url('image/switch_calibration_manual_n@3x.png');width: 100vw;height: 70%-->
+    <div id="handControl" style="display: none;">
+            <div class="weui-flex weui_flex_top">
+                <div class="weui-flex__item">
+                    <span class="weui-text calibrate_desc">设置上下端按压高度</span>
+                </div>
+            </div>
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                <span class="weui-text calibrate_txt">请从低到高逐步设置按压高度，点击“测试”。</br>您可能需要进行多次尝试，直至按键被清晰按下。</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="item__ctn">
+                    <div class="weui-slider-box" id="upbox">
+                    </div>
+                </div>
+            </div>
+            <div class="weui-flex weui_flex_top">
+                <!--<div class="weui-flex__item">
+                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="50vw" height="20vh" viewBox="0 0 230 200" enable-background="new 0 0 230 200" xml:space="preserve">
+        <text x="30" y="35" fill="#999">上端</text>
+                    <g id="rotate">
+            <rect display="none" fill="#4BA535" width="230" height="200"/>
+            <path fill="#0082FF" d="M113.7,149H96.2c-0.8,0-1.5-0.7-1.5-1.5v-97c0-0.8,0.7-1.5,1.5-1.5h17.5V149z"/>
+        </g>
+        <path fill="#CED5E0" d="M112.6,19.5h9.1v160h-9.1c-3.7,0-6.8-2.7-6.8-6v-148C105.8,22.2,108.7,19.5,112.6,19.5z"/>
+    </svg>
+                </div>-->
+                <div class="weui-flex__item">
+                    <svg version="1.1" width="40vw" height="30vw" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+<rect x="99.2" y="146.5" fill="#CED5E0" width="0" height="3.2"/>
+<g id="rotate1">
+	<path fill="#0082FF" d="M113.7,149H96.2c-0.8,0-1.5-0.7-1.5-1.5v-97c0-0.8,0.7-1.5,1.5-1.5h17.5V149z"/>
+</g>
+		<path fill="#008CFF" enable-background="new     " opacity="0.5"  d="M60.7,63.5c0,5.2,4.2,9.5,9.4,9.5c1.5,0,3.8-0.5,5.1-1c3.1-1.1,10.5-5.4,10.5-8.5c0-3.2-7.4-7.4-10.5-8.5
+			c-1.3-0.5-3.6-1-5.1-1C64.9,54,60.7,58.3,60.7,63.5z"/>
+		<text transform="matrix(1 0 0 1 64.2083 67.5)" fill="#ffffff" font-size="13px">上</text>
+	<path fill="#CED5E0" d="M112.6,19.5h9.1v160h-9.1c-3.7,0-6.8-2.7-6.8-6v-148C105.8,22.2,108.7,19.5,112.6,19.5z"/>
+</svg>
+                </div>
+
+                <div class="weui-flex__item">
+                    <svg version="1.1" width="40vw" height="30vw" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+<rect x="99.2" y="146.5" fill="#CED5E0" width="0" height="3.2"/>
+<g id="rotate2">
+	<path fill="#0082FF" d="M113.7,149H96.2c-0.8,0-1.5-0.7-1.5-1.5v-97c0-0.8,0.7-1.5,1.5-1.5h17.5V149z"/>
+
+</g>
+		<path fill="#008CFF" enable-background="new     " opacity="0.5" d="M60.7,134.5c0,5.2,4.2,9.5,9.4,9.5c1.5,0,3.8-0.5,5.1-1c3.1-1.1,10.5-5.4,10.5-8.5c0-3.2-7.4-7.4-10.5-8.5
+			c-1.3-0.5-3.6-1-5.1-1C64.9,125,60.7,129.3,60.7,134.5z"/>
+		<text transform="matrix(1 0 0 1 64.2083 139.5)" fill="#ffffff" font-size="13px">下</text>
+	<path fill="#CED5E0" d="M112.6,19.5h9.1v160h-9.1c-3.7,0-6.8-2.7-6.8-6v-148C105.8,22.2,108.7,19.5,112.6,19.5z"/>
+</svg>
+
+                </div>
+            </div>
+            <div class="item">
+                <div class="item__ctn">
+                    <div class="weui-slider-box" id="dwbox">
+
+                    </div>
+                </div>
+            </div>
+            <div class="weui-flex weui_flex_top">
+                <div class="weui-flex__item">
+                    <button class="weui-btn_custom" onclick="" id="stest" type="button">测试</button>
+                </div>
+            </div>
+            <div class="weui-flex weui_flex_top">
+                <div class="weui-flex__item">
+                    <button class="btn_hand" type="button" disabled="disabled" id="sfinish">完成</button>
+                </div>
+            </div>
+        <!--<div style="position: absolute;z-index: 1000;">
+            <img src="image/switch_calibration_manual_n@3x.png" style="width: 50vw;height: 50vw">
+        </div>-->
+    </div>
+
+    <div id="error" style="display: none">
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="errtitle">校准失败，请重试</span>
+            </div>
+        </div>
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="errtxt">请尝试以下操作后，再次尝试校准</span>
+            </div>
+        </div>
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="errtxt errarea">1. 我们监测到您一直长按按键校准按钮，如果有开关精灵按键或者灯光变化，请立即松手，进行下一步设置；</span>
+            </div>
+        </div>
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="errtxt errarea">2. 如果灯光或者按键状态仍未发生变化，请确认设备安装正确，并且同原开关上下左右居中对齐；</span>
+            </div>
+        </div>
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <span class="errtxt errarea">3. 如果需要重新设置，请点击下方"再次尝试"按钮。</span>
+            </div>
+        </div>
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <button class="weui-btn_custom" type="button" onclick="again()">再次尝试</button>
+            </div>
+        </div>
+        <div class="weui-flex weui_flex_top">
+            <div class="weui-flex__item">
+                <button class="btn_hand" type="button" onclick="hide()">稍后再尝试</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="weui-flex">
+    <div class="weui-flex__item mac_area">
+        <span class="mac_txt" id="macspan" style="display: none"></span>
+    </div>
+</div>
+
+<div style="display: none;" id="txt">
+    <div class="weui-flex" style="margin-top: 5px">
+        <div class="weui-flex__item level-left">
+            <span class="rule_text_min">低</span>
+        </div>
+        <div class="weui-flex__item level-left">
+            <span class="rule_text" style="padding-right: 0.3vw">1</span>
+        </div>
+        <div class="weui-flex__item level-left">
+            <span class="rule_text" style="padding-left: 1.1vw">2</span>
+        </div>
+        <div class="weui-flex__item level-left">
+            <span class="rule_text" style="padding-left: 2.4vw">3</span>
+        </div>
+        <div class="weui-flex__item">
+            <span class="rule_text">4</span>
+        </div>
+        <div class="weui-flex__item level-right">
+            <span class="rule_text" style="padding-right: 2.7vw">5</span>
+        </div>
+        <div class="weui-flex__item level-right">
+            <span class="rule_text" style="padding-right: 1.6vw">6</span>
+        </div>
+        <div class="weui-flex__item level-right">
+            <span class="rule_text" style="padding-right: 0.3vw">7</span>
+        </div>
+        <div class="weui-flex__item level-right">
+            <span class="rule_text_max">高</span>
+        </div>
+    </div>
+</div>
+<script type="application/javascript" src="https://g.alicdn.com/mtb/lib-windvane/2.1.8/windvane.js"></script>
+<script type="application/javascript" src="js/jquery.js"></script>
+<script type="application/javascript" src="js/weui.min.js"></script>
+<script type="application/javascript" src="js/lottie.min.js"></script>
+<script type="application/javascript" src="js/util.js?v=4"></script>
+<script type="application/javascript">
+    var keyNum = 2;
+    var currentKey = 1;
+    var scanCount = 1;
+    var currentDom = "";
+    var currentHtml = "";
+    var commonDeviceId = "";
+    var commonServiceId = "";
+    var commonNotifyId = "";
+    var commonWriteId = "";
+    var finalCommand = "";
+    var commonBackStr = "";
+    var downValue = 0;
+    var upValue = 0;
+    var upLevel = [50, 53, 56, 59, 62, 66, 70, 80, 90];
+    var downLevel = [40, 37, 34, 31, 28, 24, 20, 10, 0];
+    var cState = false;
+    var key_one_upvalue;
+    var key_one_dwvalue;
+    var key_two_upvalue;
+    var key_two_dwvalue;
+    var key_three_upvalue;
+    var key_three_dwvalue;
+    var leftKeyed = false;
+    var middleKeyed = false;
+    var rightKeyed = false;
+    var index = [0, 12, 25, 37, 50, 62, 75, 87, 100];
+    // var index = [0, 12, 24, 36, 48, 60, 72, 84, 100];
+    var angles = [40, 50, 34, 56, 28, 62, 20, 70, 10, 80, 0, 90];
+    var angles1 = [34, 40, 44, 50, 56, 62, 70, 80, 90];//上端
+    var angles2 = [56, 50, 44, 40, 34, 28, 20, 10, 0];//下端
+    var angle1 = 0;   //第一次停下
+    var angle2 = 0;  //第二次停下
+    var stepIndex = 0;  // 0=》确认安装 1=》选择按键 2=》校准第一端 3=》校准第二端 4=》测试  5=》完成
+    var currLocation = 'up';//滑块位置
+    var macAddress;
+    var version = 0;
+    var battery = -1;
+    var isConnected = false;
+    var timeoutIds = [];
+    var isInited = "false";
+    var getInfoed = false;
+    var page = {"type": ""};
+    var caliHtml = $("#first").html();
+    var maxMac = "";
+    var critical = -1;
+    var frequency = 0;
+    var bleAdpter = true;
+    var isFull = false;
+    var macs = [];
+    var isJump = false;
+    var isDebug = false;
+    var isCalibrate = "fasle";
+    var isIphone = true;
+    var width = 0;
+    var height = 0;
+
+    $(function () {
+        // alert(1);
+        try {
+        width = document.documentElement.clientWidth;
+        height = document.documentElement.clientHeight;
+        // alert("高"+height+"宽"+width);
+        console.log("高"+height+"宽"+width);
+        isDebug = getUrlParam("debug");
+
+        var userAgent = window.navigator.userAgent;
+
+        if	((/iPhone|iPad|iPod/i).test(userAgent))	{
+            // $('.nav_bar').css("height","20vw");
+        }else if((/Android/i).test(userAgent))	{
+            // $('.nav_bar').css("height","8vw");
+            isIphone = false;
+        }
+
+        console.log("手机类型"+isIphone);
+        if (height / width > 1.8) {
+            isFull = true;
+            $(".mac_area").addClass("mac_area_full");
+            $("#jump").addClass("jchk_full");
+            $("#jchk").addClass("jump_full")
+        }
+
+        // if(isIphone && height > 810){
+        //     $(".mac_area").css("top","91%");
+        // }
+          // localStorage.clear();
+
+
+        if(isDebug == "true"){
+            // $("#vedio_area").show();
+             $('#content').show();
+        }
+
+        macAddress = getUrlParam('mac');
+        keyNum = getUrlParam('productKey')
+       /* $("input[name='jvalue']").change(function () {
+            var a = $("input[name='jvalue']:checked").val();
+            if (a == "1") {
+                $("#jump").removeAttr("disabled");
+            } else {
+                $("#jump").attr("disabled", "disabled");
+            }
+        });*/
+
+
+        if (macAddress == null || macAddress == '') {
+            var devId = getUrlParam('devId');
+            if (devId == null || devId == '') {
+                $('#noparam').show();
+                return false;
+            } else {
+                macAddress = devId.substring(16, 18) + devId.substring(14, 16);
+            }
+        } else {
+            console.log(macAddress);
+            maxMac = macAddress;
+            // $("#macspan").html(macAddress);
+            macAddress = macAddress.substring(8, 12);
+        }
+        if (keyNum == null || keyNum == '') {
+            $('#noparam').show();
+            return false;
+        } else {
+            if (keyNum == '490') {
+                keyNum = 3;
+            } else if (keyNum == '489') {
+                keyNum = 2;
+            } else if (keyNum == '369') {
+                keyNum = 1;
+            }
+        }
+        // isInited = localStorage.getItem("init");
+       // var  isCalibrate = localStorage.getItem("isCalibrate");
+        // macs = '[{"mac":"2df6","init":"true"}]'
+        macs = localStorage.getItem("macs");
+        // if (isInited == undefined || isInited == null || isInited == "") {
+        //     isInited = "false";
+        // }
+        console.log("取到的", macs);
+        console.log(macAddress)
+        if (macs != null && macs != "" && macs != undefined) {
+            macs = JSON.parse(macs);
+            var l = macs.length;
+            for (var i = 0; i < l; i++) {
+                if (macs[i].mac == macAddress && macs[i].init == "true" && macs[i].calibrate == "true") {
+                    isInited = "true";
+                    isCalibrate = "true";
+                }
+            }
+            if (isInited == "false") {
+                var data = {
+                    "mac":macAddress,
+                    "init":"false",
+                    "calibrate":"false"
+                }
+                macs.push(data);
+            }
+            // localStorage.setItem("macs", JSON.stringify(macs));
+        } else {
+            macs = [];
+            var data = {
+                "mac" : macAddress,
+                "init" : "false",
+                "calibrate":"false"
+            }
+            console.log(data);
+            macs.push(data);
+            // localStorage.setItem("macs", JSON.stringify(macs));
+        }
+        if(isCalibrate == "true"){
+            $("#keycalibrate").html("&nbsp;");
+        }
+
+
+
+        var deviceName = "RoomeSwitchTm-" + macAddress;
+        // if(isInited == false){
+        //     setStatus();
+        // }
+            getBtState();
+        }catch (e) {
+            weui.alert("失败了" ,goBack());
+        }
+
+        document.addEventListener('WV.Event.WVBluetooth.discoverDevice', function (e) {
+            var device = e.param;
+            if (device.name.indexOf(deviceName) != -1) {
+                commonDeviceId = device.deviceId;
+            }
+        }, function (e) {
+            weui.alert("失败了" + JSON.stringify(e), goBack());
+        })
+    })
+
+    function connectDevice() {
+        var scanId = setInterval(function () {
+            // $("#xxxx").html("scount" + scanCount);
+            scanCount++;
+            if (commonDeviceId != 'undefined' && commonDeviceId != null && commonDeviceId != '') {
+                clearInterval(scanId);
+                scanCount = 1;
+                var deviceInfo = {
+                    deviceId: commonDeviceId
+                }
+                window.WindVane.call('WVBluetooth', 'connect', deviceInfo, function (e) {
+                    isConnected = true;
+                    // if(isInited == "false"){
+                    //     $("#pick").hide();
+                    //     $("#vedio").show()
+                    //     var vedio = document.getElementById("vedio");
+                    //     vedio.load();
+                    //     vedio.play();
+                    //
+                    //     // $("#vedio").show().attr("src","http://homi-img.oss-cn-beijing.aliyuncs.com/vedio.mp4");
+                    // }
+                    if (isInited == "true") {
+                        $('#content').show();
+                        $("#vedio_area").show();
+                        $("#jump").hide();
+                        $(".no_desc").hide();
+                        $("#jchk").hide();
+                    }else{
+
+                        var s = 5;
+                        var ss = setInterval(function () {
+                            $("#jump").html("进入向导("+s+")");
+                            s-- ;
+                            if(s < 0){
+                                clearInterval(ss);
+                                $("#jump").removeAttr("disabled").html("进入向导");
+                            }
+                        },1000);
+                    }
+                    window.WindVane.call('WVBluetooth', 'stopScan', {}, function (e) {
+                        var bId = setInterval(function () {
+                            methodNoTimeout('requestAuthorization', {}, function (e) {
+                                var state = e.state.toString();
+                                switch (state) {
+                                    case 'unsupported':
+                                        bleAdpter = false;
+                                        break;
+                                    case 'unauthorized':
+                                        bleAdpter = false;
+                                        break;
+                                    case 'poweredOff':
+                                        bleAdpter = false;
+                                        break;
+                                    case 'poweredOn':
+                                        break;
+                                    case 'unknown':
+                                        bleAdpter = false;
+                                        break;
+                                    default :
+                                        break
+                                }
+                            }, "获取蓝牙权限失败");
+                            if (bleAdpter == false) {
+                                clearInterval(bId);
+                                $("body").append("<div class=\"weui-mask weui-animate-fade-in\"></div>");
+                                weui.alert('手机蓝牙被关闭，请检查!', function () {
+                                    window.WindVane.call('AppModel', 'goBack', {})
+                                });
+                            }
+                        }, 500)
+
+                        document.addEventListener('WV.Event.WVBluetooth.GATTServerDisconnected', function (e) {
+                            isConnected = false;
+                            commonDeviceId = "";
+                            hideDialog();
+                            // $("#vedio_area").hide();
+                            // $("#content").hide();
+                            $("body").append("<div class=\"weui-mask weui-animate-fade-in\"></div>")
+                            weui.confirm("蓝牙设备已断开连接", {
+                                buttons: [{
+                                    label: '再试一次',
+                                    type: 'primary',
+                                    onClick: function () {
+                                        console.log('yes');
+                                        scanDevice();
+                                    }
+                                }, {
+                                    label: '返回',
+                                    type: 'primary',
+                                    onClick: function () {
+                                        back();
+                                    }
+                                }]
+                            })
+                        }, function (e) {
+                            weui.alert("蓝牙断开连接:" + JSON.stringify(e))
+                        });
+                        window.WindVane.call('WVBluetooth', 'getServices', deviceInfo, function (e) {
+                            var services = e.services;
+                            var length = services.length;
+                            for (var i = 0; i < length; i++) {
+                                if (services[i].serviceId.toUpperCase().indexOf('6E400001') != -1) {
+                                    commonServiceId = services[i].serviceId;
+                                }
+                            }
+                            var Charaparams = {
+                                deviceId: commonDeviceId,
+                                serviceId: commonServiceId
+                            }
+                            window.WindVane.call('WVBluetooth', 'getCharacteristics', Charaparams, function (e) {
+                                var characteristics = e.characteristics;
+                                var length = characteristics.length;
+                                for (var i = 0; i < length; i++) {
+                                    if (characteristics[i].characteristicId.toUpperCase().indexOf('6E400002') != -1) {
+                                        commonWriteId = characteristics[i].characteristicId;
+                                    }
+                                    if (characteristics[i].characteristicId.toUpperCase().indexOf('6E400003') != -1) {
+                                        commonNotifyId = characteristics[i].characteristicId;
+                                    }
+                                }
+                                closeDialog();
+                                var notifyParams = {
+                                    deviceId: commonDeviceId,
+                                    serviceId: commonServiceId,
+                                    characteristicId: commonNotifyId
+                                }
+                                window.WindVane.call('WVBluetooth', 'startNotifications', notifyParams, function (e) {
+                                    document.addEventListener('WV.Event.WVBluetooth.characteristicValueChanged', function (e) {
+                                        var backStr = e.param.value;
+                                        backStr = base64ToBase16(backStr).toUpperCase();
+
+                                        if (backStr.indexOf("0104") == -1 && backStr.indexOf("0106") == -1) {
+                                            commonBackStr = backStr;
+                                        } else if (backStr.indexOf("0104") != -1 ) {// || backStr.indexOf("0106")!= -1
+                                            if (getInfoed == false) {
+                                                currBtn();
+                                            }
+                                        }
+                                        console.log("收到的命令:   " + commonBackStr);
+                                        if (commonBackStr.indexOf("015504") != -1) {
+                                            weui.alert('亲，等你那么久，超时了！', function () {
+                                                hide();
+                                            });
+                                        }
+                                    }, function (e) {
+                                        weui.alert("失败了:" + JSON.stringify(e))
+                                    })
+                                    // setTimeout(function () {
+                                    //     currBtn();
+                                    // },500)
+                                }, function (e) {
+                                    weui.alert("失败了:" + JSON.stringify(e))
+                                })
+                            }, function (e) {
+                                weui.alert('获取蓝牙设备特征值uuid失败' + JSON.stringify(e));
+                            })
+                        }, function (e) {
+                            weui.alert('获取蓝牙设备服务失败' + JSON.stringify(e));
+                        })
+                    }, function (e) {
+                        weui.alert("失败了:" + JSON.stringify(e))
+                    })
+                }, function (e) {
+                    weui.alert("蓝牙连接失败了:" + JSON.stringify(e));
+                })
+            } else if (scanCount >= 40) {
+                clearInterval(scanId);
+                closeDialog();
+                openError();
+            }
+        }, 500);
+    }
+
+    function setStatus() {
+        currentDom = $("#keyStatusArea");
+        currentHtml = currentDom.html();
+        var title = "";
+        if (isInited == "false" &&isJump == false) {
+            currentHtml = currentHtml.replace("完成", "下一步");
+            title = "开灯方向设置"
+        } else {
+            title = "开灯方向设置"
+        }
+        custom('s', title);
+    }
+
+    function setType() {
+        currentDom = $("#keyTypeArea");
+        currentHtml = currentDom.html();
+        var title = "";
+        if (isInited == "false" && isJump == false) {
+            currentHtml = currentHtml.replace("完成", "下一步");
+            title = "开关类型设置"
+        } else {
+            title = "开关类型设置"
+        }
+        custom('t', title);
+    }
+
+    function setPanel() {
+        currentDom = $("#panelArea");
+        currentHtml = currentDom.html();
+        custom('m', '面板操作方式');
+    }
+
+    function setDistance() {
+        currentDom = $("#distanceArea");
+        currentHtml = currentDom.html();
+        custom('d', '蓝牙控制距离');
+    }
+
+    function setCalibration() {
+        currentDom = $("#calibrateArea");
+        currentHtml = currentDom.html();
+        var title = "";
+        if (isInited == "false" && isJump == false) {
+            title = "开关按键校准向导"
+        } else {
+            title = "开关按键校准"
+        }
+        custom('c', title);
+    }
+
+    function jump(){
+        isJump = true;
+        $("#status_finish").html("完成");
+        $("#type_finish").html("完成");
+        var body = '<div id="blank"><div class="weui-mask"><div class="weui-dialog" style="top:78%"><div class="weui-dialog__bd level-left" style="text-align: left;padding: 30px 40px 30px 40px; font-size: 20px;line-height: 28px;color: #2b3852">如跳过“按键校准向导”，设备可能无法正常工作！<br/>稍后可在“设备设置”中重新进入。</div><div class="weui-dialog__ft"><a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" style="color: #F14E4E;" onclick="hideDialog();">跳过按键校准</a><a href="javascript:;" onclick="cancle();" class="weui-dialog__btn weui-dialog__btn_primary">取消</a></div></div></div></div>';
+        $(".weui-picker").append(body);
+        if(isIphone && height >840){
+            $(".weui-dialog").css("top","73%");
+        }
+    }
+
+    function cancle() {
+        $("#blank").remove();
+    }
+
+    function custom(type, mode) {
+
+        currentDom.html('');
+        var body = "<div class='className'><div class=\"weui-mask weui-animate-fade-in\"></div><div class=\"weui-picker weui-animate-slide-up\"><div class=\"weui-picker__hd weui-flex\"><div class=\"picker__left\" onclick=\"hide('y')\"><i class=\"weui-picker__icon\"></i></div><div class=\"picker__middle\"><span class=\"weui-picker__title\">" + mode + "</span></div><div class='picker__right'><span class='weui-picker__again'>&nbsp;</span></div></div><div class=\"weui-picker__bd weui-background\"></div></div>"
+        $("body").append(body);
+        if(isFull){
+            $(".weui-picker__bd").css("padding-bottom","40px");
+        }
+        if(isIphone && height > 840){
+            $(".weui-picker__bd").css("padding-bottom","70px");
+        }
+
+        if (isInited == "false") {
+            page.type = type;
+            if(isJump == false){
+                $(".picker__left").html("&nbsp;").removeAttr("onclick");
+            }
+
+            if (type == "c" && isJump == false) {
+                $('.weui-picker__again').html("跳过").attr("onclick", "jump()");
+            }
+        }
+        $(".weui-picker__bd").append(currentHtml);
+        if (type == 's') {
+            var local_status = localStorage.getItem("status");
+            if (local_status != 'undefined' && local_status != null && local_status != '') {
+                $("input:radio[name='keystatus'][value='" + local_status + "']").attr("checked", true);
+            } else {
+                $("input:radio[name='keystatus'][value='0']").attr("checked", true);
+            }
+            $('#status_finish').click(function () {
+                var a = $("input[name='keystatus']:checked").val();
+                localStorage.setItem("status", a);
+                var statusCommand = "0152010t0s";
+                var type = localStorage.getItem("type");
+                statusCommand = statusCommand.replace('t', type);
+                finalCommand = statusCommand.replace('s', a);
+                setDesc('s', a);
+                writeValue();
+                setTimeout(function () {
+                    hide();
+                }, 200);
+            })
+        } else if (type == 't') {
+            var local_type = localStorage.getItem("type");
+            if (local_type != 'undefined' && local_type != null && local_type != '') {
+                $("input:radio[name='keytype'][value='" + local_type + "']").attr("checked", true);
+            } else {
+                $("input:radio[name='keytype'][value='1']").attr("checked", true);
+            }
+            $('#type_finish').click(function () {
+                var a = $("input[name='keytype']:checked").val();
+                localStorage.setItem("type", a);
+                var statusCommand = "0152010t0s";
+                var status = localStorage.getItem("status");
+                statusCommand = statusCommand.replace('s', status);
+                finalCommand = statusCommand.replace('t', a);
+                setDesc('t', a);
+                console.log(finalCommand);
+                writeValue();
+                setTimeout(function () {
+                    hide();
+                }, 200)
+            })
+        } else if (type == 'm') {
+            var local_mode = localStorage.getItem("mode");
+            if (local_mode != 'undefined' && local_mode != null && local_mode != '') {
+                $("input:radio[name='mode'][value='" + local_mode + "']").attr("checked", true);
+            } else {
+                $("input:radio[name='mode'][value='0']").attr("checked", true);
+            }
+            $("input:radio[name='mode']").change(function () {
+                var a = $("input[name='mode']:checked").val();
+                if (a == "0") {
+                    $("#typeDesc").html("触摸对应按键");
+                } else {
+                    $("#typeDesc").html("按下对应按键");
+                }
+            })
+            $('#mode_finish').click(function () {
+                var a = $("input[name='mode']:checked").val();
+                localStorage.setItem("mode", a);
+                var modeCommand = "0143010m";
+                finalCommand = modeCommand.replace('m', a);
+                setDesc('p', a);
+                console.log(finalCommand);
+                writeValue();
+                setTimeout(function () {
+                    hide();
+                }, 200);
+            })
+        } else if (type == 'd') {
+            var local_distance = localStorage.getItem("distance");
+            if (local_distance != 'undefined' && local_distance != null && local_distance != '') {
+                $("input:radio[name='distance'][value='" + local_distance + "']").attr("checked", true);
+            } else {
+                $("input:radio[name=''][value='1']").attr("checked", true);
+            }
+            $('#dis_finish').click(function () {
+                var a = $("input[name='distance']:checked").val();
+                localStorage.setItem("distance", a);
+                var distanceCommand = "0142010d00";
+                if (a === '1') {
+                    finalCommand = distanceCommand.replace('d', 3);
+                    setDesc('d', '3');
+                } else if (a === '2') {
+                    finalCommand = distanceCommand.replace('d', 5);
+                    setDesc('d', '5');
+                } else if (a === '3') {
+                    finalCommand = distanceCommand.replace('d', 7);
+                    setDesc('d', '7');
+                }
+                console.log(finalCommand);
+                writeValue();
+                setTimeout(function () {
+                    hide();
+                }, 200);
+            })
+        } else if (type == 'c') {
+            calibration();
+        }
+
+    }
+
+    function test() {
+        var testCommand = "0155020";
+        finalCommand = getTestCommand(testCommand);
+        finalCommand += int2HexStr(upValue);
+        writeValue();
+        finalCommand = getTestCommand(testCommand);
+        finalCommand += int2HexStr(downValue);
+        writeValue();
+    }
+
+    function test1(value) {
+        var testCommand = "0155020";
+        finalCommand = getTestCommand(testCommand);
+        finalCommand += int2HexStr(value);
+        writeValue();
+    }
+
+    function getTestCommand(command) {
+        switch (currentKey) {
+            case 1:
+                command += "1";
+                break;
+            case 2:
+                command += "2";
+                break;
+            case 3:
+                command += "4";
+                break;
+        }
+        return command;
+    }
+
+    function finish(t) {
+        $("#keycalibrate").html("&nbsp;");
+        $("#status_finish").html("完成");
+        $("#type_finish").html("完成");
+        // localStorage.setItem("isCalibrate","1");
+        if (t == true) {
+            finalCommand = "0155030";
+            if (version <= 103) {
+                upValue = 90 - parseInt(upValue);
+                downValue = 90 - parseInt(downValue);
+            }
+            if (keyNum == 3) {
+                finalCommand = finalCommand + "7";
+            } else if (keyNum == 2) {
+                finalCommand = finalCommand + "3";
+            }
+            finalCommand = finalCommand + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(upValue) + int2HexStr(downValue);
+            writeValue();
+        }
+        // else {
+        //            finalCommand = getTestCommand(finalCommand);
+        //            finalCommand = finalCommand + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(upValue) + int2HexStr(downValue);
+        //            switch (currentKey) {
+        //                case 1 :
+        //                    finalCommand = finalCommand + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(key_two_upvalue) + int2HexStr(key_two_dwvalue) + int2HexStr(key_three_upvalue) + int2HexStr(key_three_dwvalue);
+        //                    break;
+        //                case 2 :
+        //                    finalCommand = finalCommand  + int2HexStr(key_one_upvalue) + int2HexStr(key_one_dwvalue) + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(key_three_upvalue) + int2HexStr(key_three_dwvalue);
+        //                    break;
+        //                case 3 :
+        //                    finalCommand = finalCommand  + int2HexStr(key_one_upvalue) + int2HexStr(key_one_dwvalue) + int2HexStr(key_two_upvalue) + int2HexStr(key_two_dwvalue) + int2HexStr(upValue) + int2HexStr(downValue);
+        //                    break;
+        //            }
+        //        }
+        if (isInited == "false") {
+            // alert(isInited);
+            isInited = "true";
+            isCalibrate = "true";
+            var l = macs.length;
+            for (var i = 0; i < l; i++) {
+                if (macs[i].mac == macAddress && macs[i].init == "false" && macs[i].calibrate == "false") {
+                    macs[i].init = isInited;
+                    macs[i].calibrate = isCalibrate;
+                }
+            }
+             localStorage.setItem("macs", JSON.stringify(macs));
+        }
+        setTimeout(function () {
+            hide();
+            // if (commonBackStr.indexOf("010001550000") != -1) {
+            //     hide();
+            // }
+        }, 100)
+    }
+
+    function save() {
+        // alert(upValue +"  "+downValue);
+        finalCommand = "0155030";
+        if (version <= 103) {
+            upValue = 90 - parseInt(upValue);
+            downValue = 90 - parseInt(downValue);
+        }
+        finalCommand = getTestCommand(finalCommand);
+        // finalCommand = finalCommand + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(upValue) + int2HexStr(downValue);
+        switch (currentKey) {
+            case 1 :
+                finalCommand = finalCommand + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(key_two_upvalue) + int2HexStr(key_two_dwvalue) + int2HexStr(key_three_upvalue) + int2HexStr(key_three_dwvalue);
+                break;
+            case 2 :
+                finalCommand = finalCommand + int2HexStr(key_one_upvalue) + int2HexStr(key_one_dwvalue) + int2HexStr(upValue) + int2HexStr(downValue) + int2HexStr(key_three_upvalue) + int2HexStr(key_three_dwvalue);
+                break;
+            case 3 :
+                finalCommand = finalCommand + int2HexStr(key_one_upvalue) + int2HexStr(key_one_dwvalue) + int2HexStr(key_two_upvalue) + int2HexStr(key_two_dwvalue) + int2HexStr(upValue) + int2HexStr(downValue);
+                break;
+        }
+        // alert(currentKey+"  "+finalCommand);
+        writeValue();
+    }
+
+    function hideDialog() {
+        if (currentDom != "") {
+            currentDom.html(currentHtml);
+            $('.weui-mask').addClass('weui-animate-fade-out');
+            $('.weui-picker').addClass('weui-animate-slide-down').on('animationend webkitAnimationEnd', function () {
+                $('.weui-mask').remove();
+                $('.weui-picker').remove();
+            });
+        }
+    }
+
+
+    function hide(y) {
+        stepIndex = 0;
+        leftKeyed = false;
+        middleKeyed = false;
+        rightKeyed = false;
+        var length = timeoutIds.length;
+        for (var i = 0; i < length; i++) {
+            clearTimeout(timeoutIds[i]);
+        }
+        timeoutIds = [];
+        if (cState) {
+            finalCommand = "015504";
+            writeValue();
+            cState = false;
+            // setTimeout(function () {
+            //     if (commonBackStr.indexOf("010001550000") != -1) {
+            //         cState = false;
+            //     }
+            // }, 500);
+        }
+        currentDom.html(currentHtml);
+        hideDialog();
+        setTimeout(function () {
+            if (isInited == "false") {
+                if (y == "y") {
+                    isInited = "true";
+                } else {
+                    var type = page.type;
+                    switch (type) {
+                        case 't':
+                            setStatus();
+                            break;
+                        // case '':
+                        //      setPanel();
+                        //     break;
+                        case 's':
+                            setCalibration();
+                            break;
+                    }
+                }
+            }
+        }, 500);
+
+    }
+
+    function writeValue() {
+        console.log("写入命令:  " + finalCommand);
+        if(isDebug != "true"){
+            var params = {
+                deviceId: commonDeviceId,
+                serviceId: commonServiceId,
+                characteristicId: commonWriteId
+            }
+            var command = hex2a(finalCommand)
+            params.value = btoa(command);
+            methodNoTimeout('writeValue', params, function (e) {
+            }, "写入命令失败")
+        }
+
+    }
+
+    function currBtn() {
+        finalCommand = "01a100";
+        writeValue();
+        setTimeout(function () {
+            if (commonBackStr.indexOf("010001A10001") != -1) {
+                var len = commonBackStr.length;
+                var panel = commonBackStr.substring(len - 9, len - 8);
+                var type = commonBackStr.substring(len - 7, len - 6);
+                var status = commonBackStr.substring(len - 5, len - 4);
+                var distance = commonBackStr.substring(len - 3, len - 2);
+                console.log("s" + status + "t" + type + "p" + panel + "d" + distance);
+                localStorage.setItem("status", status);
+                localStorage.setItem("type", type);
+                localStorage.setItem("mode", panel);
+                setDesc("d", distance);
+                setDesc("s", status);
+                setDesc("t", type);
+                setDesc("p", panel);
+                getInfoed = true;
+                if (version == 0) {
+                    finalCommand = "018300";
+                    writeValue();
+                    setTimeout(function () {
+                        if (commonBackStr.indexOf("0100018300") != -1) {
+                            var l = commonBackStr.length;
+                            var major = commonBackStr.substring(l - 5, l - 4);
+                            var minor = commonBackStr.substring(l - 3, l - 2);
+                            var build = commonBackStr.substring(l - 1, l);
+                            version = 100 * parseInt(major) + 10 * parseInt(minor) + parseInt(build);
+                            if (maxMac != null && maxMac != "") {
+                                var macContent = "V" + major + "." + minor + "." + build + "." + maxMac.toUpperCase();
+                                // alert(commonBackStr);
+                                $("#macspan").html(macContent);
+                                if(isInited == "true"){
+                                    $("#macspan").show();
+                                }
+                            }
+                            // if(isInited == false){
+                            //     setType();
+                            // }
+                            // if (battery == -1 && version >= 105) {
+                            //     finalCommand = "017e00";
+                            //     writeValue();
+                            //     setTimeout(function () {
+                            //         if (commonBackStr.indexOf("0100017E00") != -1) {
+                            //             battery = commonBackStr.substring(commonBackStr.length - 2, commonBackStr.length);
+                            //             battery = hex2dec(battery);
+                            //             // alert("当前电量:" + battery)
+                            //             if (version >= 106 && frequency == 0 && critical == -1) {
+                            //                 finalCommand = "01d100";
+                            //                 writeValue();
+                            //                 setTimeout(function () {
+                            //                     if (commonBackStr.indexOf("010001D10001") != -1) {
+                            //                         critical = commonBackStr.substring(commonBackStr.length - 6, commonBackStr.length - 4);
+                            //                         critical = hex2dec(critical);
+                            //                         frequency = commonBackStr.substring(commonBackStr.length - 4, commonBackStr.length);
+                            //                         frequency = parseInt(frequency, 16);
+                            //                         // alert("阈值:"+critical+"  频率:"+frequency+"  电量:"+battery);
+                            //                     }
+                            //                 }, 100)
+                            //             }
+                            //         }
+                            //     }, 100);
+                            // }
+                        }
+                    }, 150)
+                }
+            }
+        }, 100);
+    }
+
+    function getIndex(upValue, dwValue) {
+        var ulen = upLevel.length;
+        var dlen = downLevel.length;
+        var result = [];
+        for (var i = 0; i < ulen; i++) {
+            if (parseInt(upValue) == upLevel[i]) {
+                result.push(i);
+            }
+        }
+        for (var j = 0; j < dlen; j++) {
+            if (parseInt(dwValue) == downLevel[j]) {
+                result.push(j);
+            }
+        }
+        console.log(result);
+        return result;
+    }
+
+    var getIndex2 =function (upValue, dwValue)  {
+        // alert(upValue+"  "+dwValue)
+        var ulen = upLevel.length - 1;
+        var dlen = downLevel.length - 1;
+        var upIndex, downIndex;
+        upIndex = upLevel.indexOf(upValue);
+        downIndex = downLevel.indexOf(dwValue);
+        if (upIndex == -1) {
+            for (var i = 0; i < ulen; i++) {
+                if (i == 0 && upValue < upLevel[0]) {
+                    upIndex = 0;
+                    break;
+                }
+                if (upLevel[i] < upValue && upLevel[i + 1] > upValue) {
+                    upIndex = i;
+                }
+            }
+        }
+        if (downIndex == -1) {
+            for (var i = 0; i < dlen; i++) {
+                if (i == 0 && dwValue > downLevel[0]) {
+                    downIndex = 0;
+                    break;
+                }
+                if (downLevel[i] > dwValue && downLevel[i + 1] < dwValue) {
+                    downIndex = i;
+                }
+            }
+        }
+        var result = [];
+        result.push(upIndex);
+        result.push(downIndex);
+        // alert(upIndex+"  "+downIndex);
+        return result;
+    }
+
+
+    function setDesc(descType, value) {
+        switch (descType) {
+            case 's':
+                if (value === '0') {
+                    $("#keystatus").html('按下方开灯');
+                } else if (value === '1') {
+                    $("#keystatus").html('按上方开灯');
+                }
+                break;
+            case 't':
+                if (value === '1') {
+                    $("#keytype").html('普通开关');
+                } else if (value === '2') {
+                    $("#keytype").html('自复位开关');
+                }
+                break;
+            case 'd':
+                if (parseInt(value) <= 3) {
+                    localStorage.setItem("distance", '1');
+                    $("#distance").html('省电模式');
+                } else if (parseInt(value) > 3 && parseInt(value) <= 5) {
+                    localStorage.setItem("distance", '2');
+                    $("#distance").html('常用模式');
+                } else if (parseInt(value) > 5 && parseInt(value) <= 7) {
+                    localStorage.setItem("distance", '3');
+                    $("#distance").html('增强模式');
+                }
+                break;
+            case 'p':
+                if (value === '0') {
+                    $("#keymode").html('触摸');
+                } else if (value === '1') {
+                    $("#keymode").html('按下');
+                }
+                break;
+        }
+    }
+
+    function scanDevice() {
+        scanCount = 1;
+        connectDevice();
+        closeDialog();
+        window.WindVane.call('WVBluetooth', 'scan', {}, function (e) {
+            var body = '<div class="weui-mask"><div class="weui-dialog weui-dialog__custom"><div class="weui-dialog__bd" style="padding: 10px;"><div class="weui-loading loading"></div><br/><span class="errtxt">正在搜索设备...</span></div><div class="weui-dialog__ft"><a href="javascript:;" onclick="back()" class="weui-dialog__btn weui-dialog__btn_primary">取消</a></div></div></div>'
+            $("body").append(body);
+        }, function (e) {
+            closeDialog();
+            openError();
+        });
+    }
+
+    function getNum(value) {
+        for (var i = 0; i < 9; i++) {
+            if (index[i] == value) {
+                return i;
+            }
+        }
+    }
+
+    function hidePage(index) {
+        console.log("当前隐藏:   " + index);
+        switch (index) {
+            case 0:
+                $('#guide').hide();
+                break;
+            case 1:
+                $('#start').hide();
+                break;
+            case 2:
+                $('#first').hide();
+                break;
+            case 4:
+                $('#test').hide();
+                break;
+            case 5:
+                $("#handControl").hide();
+                break;
+            case 6:
+                $('#error').hide();
+                break;
+        }
+    }
+
+    function showPage(index) {
+        console.log('当前显示:   ' + index);
+        switch (index) {
+            case 0:
+                $('#guide').show();
+                break;
+            case 1:
+                $('#start').show();
+                break;
+            case 2:
+                $('#first').show();
+                break;
+            case 4:
+                $('#test').show();
+                break;
+            case 5:
+                $('#handControl').show();
+                break;
+            case 6:
+                $('#error').show();
+                break;
+        }
+    }
+
+    function again() {
+        finalCommand = "015504"
+        writeValue();
+        $("input[name='vali']").unbind();
+        leftKeyed = false;
+        middleKeyed = false;
+        rightKeyed = false;
+        $('.weui-picker__again').html("").removeAttr("onclick");
+        $(".weui-picker__bd").html(currentHtml);
+        // hidePage(stepIndex);
+        stepIndex = 0;
+        // showPage(stepIndex);
+        calibration();
+        // $('#start_btn').trigger("click");
+    }
+
+    function setCurrentKeyPanel(status) {
+        var value = '';
+        if (keyNum == 1) {
+            value = 'url("image/swith_icon_one_' + status + '@3x.png")'
+        } else if (keyNum == 2) {
+            if (currentKey == 1) {
+                value = 'url("image/swith_icon_two_left_' + status + '@3x.png")';
+            } else if (currentKey == 2) {
+                value = 'url("image/swith_icon_two_right_' + status + '@3x.png")';
+            }
+        } else if (keyNum == 3) {
+            if (currentKey == 1) {
+                value = 'url("image/swith_icon_three_left_' + status + '@3x.png")';
+                $('.option_panel').css('background-image', value);
+            } else if (currentKey == 2) {
+                value = 'url("image/swith_icon_three_middle_' + status + '@3x.png")';
+            } else if (currentKey == 3) {
+                value = 'url("image/swith_icon_three_right_' + status + '@3x.png")';
+            }
+        }
+        $('.option_panel').css('background-image', value);
+    }
+
+    function setCurrentKey(a) {
+        // if (keyNum == 2 && currentKey == 2) {
+        //     currentKey = 3;
+        // }
+        // if (a == "1") {
+        //     var body = '';
+        //     for (var i = 0; i <= keyNum; i++) {
+        //         body += '<div class="weui-flex__item">';
+        //         console.log("setC"+currentKey)
+        //             if (i == parseInt(currentKey) - 1) {
+        //                 body += '<div id="up_btn" class="up_btn" style="display: none"></div>';
+        //             }
+        //             body += '</div>'
+        //         }
+        //         $('.option_key').html(body);
+        // }
+        if (keyNum == 2 && currentKey == 3) {
+            currentKey = 2;
+        }
+    }
+
+    function setKeyPanel() {
+        if (keyNum == 1) {
+            $('#left_key').show()
+            $('#leftkey').html('<img class="start_img" src="image/switch_choose_button_n.png"></br>点击开始');  //</br><img class="start_img" src="image/switch_test_icon_middle_n@3x.png">
+        } else if (keyNum == 2) {
+            $('#left_key').show()
+            $('#first_line').show();
+            $('#right_key').show()
+            if (currentKey == 1) {
+                $('#rightkey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+            } else if (currentKey == 2) {
+                $('#leftkey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+            }
+        } else if (keyNum == 3) {
+            $('#left_key').show();
+            $('#first_line').show();
+            $('#middle_key').show();
+            $('#second_line').show();
+            $('#right_key').show();
+            if (currentKey == 1) {
+                $('#rightkey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+                $('#middlekey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+            } else if (currentKey == 2) {
+                $('#leftkey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+                $('#rightkey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+            } else if (currentKey == 3) {
+                $('#leftkey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+                $('#middlekey').children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+            }
+        }
+    }
+
+    function queryOtherKey() {
+        finalCommand = "015500";
+        writeValue();
+        setTimeout(function () {
+            if (commonBackStr.indexOf("010001550001") != -1) {
+                var length = commonBackStr.length;
+                key_one_upvalue = parseInt(hex2dec(commonBackStr.substring(12, 14)));
+                key_one_dwvalue = parseInt(hex2dec(commonBackStr.substring(14, 16)));
+                key_two_upvalue = parseInt(hex2dec(commonBackStr.substring(16, 18)));
+                key_two_dwvalue = parseInt(hex2dec(commonBackStr.substring(18, 20)));
+                key_three_upvalue = parseInt(hex2dec(commonBackStr.substring(20, 22)));
+                key_three_dwvalue = parseInt(hex2dec(commonBackStr.substring(22, 24)));
+
+                key_one_upvalue = 90 - key_one_upvalue;
+                key_two_upvalue = 90 - key_two_upvalue;
+                key_three_upvalue = 90 - key_three_upvalue;
+                key_one_dwvalue = 90 - key_one_dwvalue;
+                key_two_dwvalue = 90 - key_two_dwvalue;
+                key_three_dwvalue = 90 - key_three_dwvalue;
+
+                if (key_one_upvalue < key_one_dwvalue) {
+                    var temp = key_one_upvalue;
+                    key_one_upvalue = key_one_dwvalue;
+                    key_one_dwvalue = temp;
+                }
+                if (key_two_upvalue < key_two_dwvalue) {
+                    var temp = key_two_upvalue;
+                    key_two_upvalue = key_two_dwvalue;
+                    key_two_dwvalue = temp;
+                }
+                if (key_three_upvalue < key_three_dwvalue) {
+                    var temp = key_three_upvalue;
+                    key_three_upvalue = key_three_dwvalue;
+                    key_three_dwvalue = temp;
+                }
+                // alert(key_one_upvalue + " " + key_one_dwvalue + " " + key_two_upvalue + " " + key_two_dwvalue + " " + key_three_upvalue + " " + key_three_dwvalue +" 当前:"+currentKey);
+            }
+        }, 300)
+    }
+
+    function calibration() {
+        queryOtherKey();
+        var isCheck = 0;
+        $("input[name='vali']").change(function () {
+            var a = $("input[name='vali']:checked").val();
+            if (a == 1) {
+                if (isCheck == 0) {
+                    isCheck = 1;
+                }
+                console.log("step:" + stepIndex);
+                $("#guide_btn").removeAttr('disabled');
+                $("#fControl").removeAttr("disabled"); //手动校准可点击
+                $("#guide_btn").click(function () {
+                    if (isCheck == 0) {
+                        return;
+                    }
+                    isCheck = 0;
+                    if (a == 1) {
+                        console.log("step:" + stepIndex);
+                        $(".picker__left").html("<i class=\"weui-picker__icon\"></i>").attr("onclick", "hide('y')");
+                        $(".weui-picker__again").html("&nbsp;");
+                        hidePage(stepIndex);
+                        stepIndex++;
+                        showPage(stepIndex);
+                        console.log("step:" + stepIndex);
+                        setKeyPanel();
+                    }
+                    $("#start_btn").click(function () {
+                        console.log("1901 step:" + stepIndex);
+                        hidePage(stepIndex);
+                        stepIndex++;
+                        console.log("step:" + stepIndex);
+                        setCurrentKey("1");
+                        setCurrentKeyPanel('off');
+                        showPage(stepIndex);
+                        // 发送开始校准
+                        var starCommand = "0155010";
+                        finalCommand = getTestCommand(starCommand);
+                        writeValue();
+                        var wId = setTimeout(function () {
+                            if (commonBackStr.indexOf("010001550000") != -1) {
+                                cState = true;
+                                //发45度
+                                finalCommand = getTestCommand("0155020") + int2HexStr(45);
+                                writeValue();
+                            }
+                        }, 500);
+                        timeoutIds.push(wId);
+                        // var up = lottie.loadAnimation({
+                        //     container: document.getElementById('up_btn'),
+                        //     renderer: 'svg',
+                        //     loop: true,
+                        //     autoplay: false,
+                        //     path: 'js/up.json'
+                        // });
+                        var dw = lottie.loadAnimation({
+                            container: document.getElementById('dw_btn'),
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: false,
+                            path: 'js/dw.json'
+                        });
+                        var ok = lottie.loadAnimation({
+                            container: document.getElementById('ok_key'),
+                            renderer: 'svg',
+                            loop: false,
+                            autoplay: false,
+                            path: 'js/ok.json'
+                        });
+                        // ok.setSpeed(0.5);
+                        var sId;
+                        var tId;
+                        var keyType = localStorage.getItem('type');
+                        if(isDebug == "true"){
+                            keyType = "1";
+                        }
+                        var flag = true;
+                        var j = 0;
+                        if (keyType == '1') {
+                            var i = 0;
+                            document.getElementById('static').ontouchstart = function () {
+                                if (flag) {
+                                    $('#static').hide().removeClass('dw_btn_img')
+                                    $('#dw_btn').show();
+                                    if (stepIndex == 2) {
+                                        // $('#up_btn').show();
+                                        dw.play();
+                                        // up.play();
+                                        $('#clickStart').html("");
+                                        $('#clickStep').html("正在校准...");
+                                        $("#click_desc").html("当原开关按键状态变化时，<br/>请立即松手...").css("font-weight", "bold").css("font-size", "5.2vw").css("color", "#0082ff");
+                                        sId = setInterval(function () {//依次发第一个角度数字;
+                                            if (i >= 12) {
+                                                clearInterval(sId);
+                                                hidePage(stepIndex);
+                                                stepIndex = 6;
+                                                showPage(stepIndex);
+                                                return;
+                                                //跳转失败页面
+                                            }
+                                            test1(angles[i]);
+                                            i++;
+                                            j = 1;
+
+                                        }, 2000);
+                                    } else if (stepIndex == 3) {//校准另一端
+                                        // $('#up_btn').css('margin-top', '13vw').show();
+                                        dw.play();
+                                        // up.play();
+                                        $('#clickStart').html("");
+                                        $('#clickStep').html("正在校准...");
+                                        $("#click_desc").html("当原开关按键状态变化时，<br/>请立即松手...").css("font-weight", "bold").css("font-size", "5.2vw").css("color", "#0082ff");
+                                        sId = setInterval(function () {
+                                            if (i == 9) {
+                                                clearInterval(sId);
+                                                hidePage(stepIndex - 1);
+                                                stepIndex = 6;
+                                                showPage(stepIndex);
+                                                return;
+                                                //跳转失败页面
+                                            }
+
+                                            if (angle1 > 45) {//发送angles2中角度
+                                                test1(angles2[i]);
+                                            } else {//发送angles1中角度
+                                                test1(angles1[i]);
+                                            }
+                                            i++;
+                                            j = 1;
+                                        }, 2000);
+                                    }
+                                }
+                            };
+                            document.getElementById('static').ontouchend = function () {
+                                if (flag == true) {
+                                    if (j > 0) {
+                                        j = 0;
+                                        flag = false;
+                                        $('#click_desc').stop();
+                                        // clearInterval(tId);
+                                        clearInterval(sId);
+                                        if (stepIndex == 2) {
+                                            $('#clickStep').html("第一步：完成");
+                                            $('#click_desc').html("");
+                                            $("#clickStart").html("即将开始第二步...").css('color', '#2b3852').removeClass("cycle");
+                                            angle1 = angles[i - 1];
+                                            setCurrentKeyPanel('on');
+                                            var cId = setTimeout(function () {
+                                                ok.stop();
+                                                flag = true;
+                                                $('#dw_btn').hide();
+                                                $('.dw_btn_ok').hide();
+                                                $('.click_txt').show().html("再次</br>按住");
+                                                $('#static').show().addClass('dw_btn_img');
+                                                stepIndex++;
+                                                $('#clickStep').html('第二步: 校准按键另一端');
+                                                $('#clickStart').html('再次按住下方按钮');
+                                                $('#click_desc').html('当原开关按键状态变化时，松开下方按钮...').css("font-size", "").css("font-weight", "").css("color", "#2b3852");
+                                                if (angle1 > 60) {
+                                                    i = 3;   //从40开始依次发
+                                                } else if (angle1 > 45) {
+                                                    i = angles2.indexOf(angle1) + 1;
+                                                } else if (angle1 < 30) {
+                                                    i = 3;
+                                                } else {
+                                                    i = angles1.indexOf(angle1) + 1;
+                                                }
+                                            }, 2000);
+                                            timeoutIds.push(cId);
+                                        } else if (stepIndex == 3) {
+                                            $('#clickStep').html("第二步：完成");
+                                            $("#clickStart").html("即将开始测试").removeClass("cycle");
+                                            $('#click_desc').html("");
+                                            if (angle1 > 45) {
+                                                angle2 = angles2[i - 1]
+                                            } else {
+                                                angle2 = angles1[i - 1]
+                                            }
+                                            setCurrentKeyPanel('off');
+                                            var nId = setTimeout(function () {
+                                                hidePage(stepIndex - 1);
+                                                stepIndex++;//跳转界面
+                                                flag = true;
+                                                showPage(stepIndex);
+                                                $("#up_btn").remove();
+                                                // up.destroy();
+                                                // dw.destroy();
+                                                // ok.destroy();
+                                                $('.weui-picker__again').html("重新校准").attr("onclick", "again()");
+                                                if (angle1 > angle2) {
+                                                    upValue = angle1;
+                                                    downValue = angle2;
+                                                } else {
+                                                    upValue = angle2;
+                                                    downValue = angle1;
+                                                }
+                                                setKeyAngles();
+                                                $("#first").html(caliHtml);
+                                                currLocation = "up";
+                                                var status = localStorage.getItem('status');
+                                                var sta = status;
+                                                $("input[name='openStatus']").change(function () {
+                                                    sta = $("input[name='openStatus']:checked").val();
+                                                    localStorage.setItem("status", sta);
+                                                    console.log("change" + sta);
+                                                    status = sta;
+                                                    var statusCommand = "0152010t0s";
+                                                    var type = localStorage.getItem("type");
+                                                    statusCommand = statusCommand.replace('t', type);
+                                                    finalCommand = statusCommand.replace('s', sta);
+                                                    setDesc('s', sta);
+                                                    writeValue();
+                                                    if (currLocation == 'up') {
+                                                        $('#btn_block').animate({marginTop: '34vw'});
+                                                        currLocation = 'dw';
+                                                        if (sta == '1') {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb_gray.png');
+                                                            $('#opstatus').html('关闭');
+                                                        } else if (sta == '0') {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb.png');
+                                                            $('#opstatus').html('开启');
+                                                        }
+                                                    } else {
+                                                        $('#btn_block').animate({marginTop: '0vw'});
+                                                        currLocation = 'up';
+                                                        if (sta == '1') {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb.png');
+                                                            $('#opstatus').html('开启');
+                                                        } else if (sta == "0") {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb_gray.png');
+                                                            $('#opstatus').html('关闭');
+                                                        }
+                                                    }
+                                                    //设置开关状态
+                                                })
+
+                                                // document.getElementsByClassName("slider_area").ontouchstart = function (){
+                                                $('.slider_area').click(function () {
+                                                    console.log("click" + sta);
+                                                    $('#finish_two').html("测试成功").removeAttr('disabled');
+                                                    if (currLocation == 'up') {
+                                                        $('#btn_block').animate({marginTop: '34vw'},150);
+                                                        currLocation = 'dw';
+                                                        if (sta == '1') {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb_gray.png');
+                                                            $('#opstatus').html('关闭');
+                                                        } else if (sta == '0') {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb.png');
+                                                            $('#opstatus').html('开启');
+                                                        }
+                                                    //     $('#blub').attr('src', 'image/index_dev_bulb_gray.png');
+                                                    // $('#opstatus').html('关闭');
+                                                    } else {
+                                                        $('#btn_block').animate({marginTop: '0vw'},150);
+                                                        currLocation = 'up';
+                                                        if (sta == '1') {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb.png');
+                                                            $('#opstatus').html('开启');
+                                                        } else if (sta == "0") {
+                                                            $('#blub').attr('src', 'image/index_dev_bulb_gray.png');
+                                                            $('#opstatus').html('关闭');
+                                                        }
+                                                    //     $('#blub').attr('src', 'image/index_dev_bulb.png');
+                                                    // $('#opstatus').html('开启');
+                                                    }
+                                                    if ((currLocation == 'up' && status == '1') || (currLocation == 'dw' && status == '0')) {//舵机在上端
+                                                        test1(angle1 > angle2 ? angle2 : angle1);
+                                                    } else {
+                                                        test1(angle1 > angle2 ? angle1 : angle2);
+                                                        //发第二个角度
+                                                    }
+                                                })
+                                                var query = "input[name='openStatus'][value='" + status + "']";
+                                                $(query).attr("checked", "checked");
+                                            //     if (angle2 < angle1) {
+                                            //     if ('1' == status) {
+                                            //         currLocation = 'dw'
+                                            //         $('.slider_area').trigger('click');
+                                            //     } else if ('0' == status) {
+                                            //         currLocation = 'up'
+                                            //         $('.slider_area').trigger('click');
+                                            //     }
+                                            // } else if (angle2 > angle1) {
+                                            //     if ('1' == status) {
+                                            //         currLocation = 'dw'
+                                            //         $('.slider_area').trigger('click');
+                                            //     } else if ('0' == status) {
+                                            //         currLocation = 'up'
+                                            //         $('.slider_area').trigger('click');
+                                            //     }
+                                            // }
+                                            }, 3000);
+                                            timeoutIds.push(nId);
+                                        }
+                                        // up.play();
+                                        dw.stop();
+                                        // $('#up_btn').hide();
+                                        $('#dw_btn').hide();
+                                        $('#static').show();
+                                        $('.click_txt').hide();
+                                        $('.dw_btn_ok').show();
+                                        ok.play();
+                                    }else{
+                                        openToast();
+                                        if(stepIndex == 2){
+                                            $("#clickStep").html("第一步: 校准按键一端");
+                                            $('#clickStart').html("按住下方按钮，开始校准");
+                                        }else if(stepIndex == 3){
+                                            $("#clickStep").html("第二步: 校准按键另一端");
+                                            $('#clickStart').html("再次按住下方按钮");
+                                        }
+                                        $("#click_desc").html("当原开关按键状态变化时，松开下方按钮...").css('color', '#2b3852').css("font-weight","").css("font-size","");
+                                        // clearInterval(tId);
+                                        clearInterval(sId);
+                                        // up.stop();
+                                        dw.stop();
+                                        // $('#up_btn').hide();
+                                        $('#dw_btn').hide();
+                                        $('#static').show().addClass('dw_btn_img');
+                                    }
+                                } else {
+                                    // weui.alert("请按住下方按钮开始");
+
+                                }
+                            }
+
+                        } else if (keyType == '2') {
+                            var tId;
+                            var status = localStorage.getItem('status');
+                            if (status == '1') {
+                                $('#clickStep').html('校准按键上端');
+                            } else if (status == '0') {
+                                $('#clickStep').html('校准按键下端');
+                                // $('#up_btn').css('margin-top', '13vw');
+                            }
+                            var i = 3;
+                            document.getElementById('static').ontouchstart = function () {
+                                if (flag == true) {
+                                    $('#static').hide().removeClass('dw_btn_img')
+                                    $('#dw_btn').show();
+                                    // $('#up_btn').show();
+                                    dw.play();
+                                    // up.play();
+                                    $('#clickStart').html("");
+                                    $('#clickStep').html("正在校准...");
+                                    $("#click_desc").html("当原开关按键状态变化时，<br/>请立即松手...").css("font-weight", "bold").css("font-size", "5.2vw").css("color", "#0082ff");
+                                    sId = setInterval(function () {
+
+                                        if (i >= 9) {
+                                            clearInterval(sId);
+                                            hidePage(stepIndex);
+                                            stepIndex = 6;
+                                            showPage(stepIndex);
+                                            flag = false;
+                                            return;
+                                            //跳转失败页面
+                                        }
+                                        if (status == '1') {
+                                            test1(angles1[i]);
+                                            var wId = setTimeout(function () {
+                                                test1(40);
+                                            }, 200)
+                                            timeoutIds.push(wId);
+                                        } else if (status == '0') {
+                                            test1(angles2[i]);
+                                            var wId = setTimeout(function () {
+                                                test1(50);
+                                            }, 200)
+                                            timeoutIds.push(wId);
+                                        }
+                                        i++;
+                                        j = 1;
+                                        console.log(i);
+                                    }, 2000);
+                                }
+                            }
+                            document.getElementById('static').ontouchend = function () {
+                                if (j > 0) {
+                                    j = 0;
+                                    if (i == 9) {
+                                        i = 8;
+                                    }
+                                    // clearInterval(tId);
+                                    $("#clickStep").html("校准完成")
+                                    $('#clickStart').html("&nbsp;");
+                                    $("#click_desc").html("即将开始测试").css('color', '#2b3852').removeClass("cycle");
+                                    ;
+                                    // $('#up_btn').hide();
+                                    // up.stop();
+                                    dw.stop();
+                                    $('#dw_btn').hide();
+                                    $('#static').show();
+                                    $('.click_txt').hide();
+                                    $('.dw_btn_ok').show();
+                                    ok.play();
+                                    clearInterval(sId);
+                                    if (status == '1') {
+                                        angle1 = angles1[i];
+                                        angle2 = 40;
+                                    } else if (status == '0') {
+                                        angle1 = angles2[i];
+                                        angle2 = 50;
+                                    }
+                                    if (flag == true) {
+                                        flag = false;
+                                        var nId = setTimeout(function () {
+                                            // up.destroy();
+                                            // dw.destroy();
+                                            // ok.destroy()
+                                            $("#up_btn").remove();
+                                            hidePage(stepIndex);
+                                            stepIndex = 4;//跳转界面
+                                            flag = true;
+                                            showPage(stepIndex);
+                                            $('.weui-picker__again').html("重新校准").attr("onclick", "again()");
+                                            if (angle1 > angle2) {
+                                                upValue = angle1;
+                                                downValue = angle2;
+                                            } else {
+                                                upValue = angle2;
+                                                downValue = angle1;
+                                            }
+                                            setKeyAngles();
+                                            $("#first").html(caliHtml);
+                                            currLocation = "up";
+                                            var status = localStorage.getItem('status');
+                                            $("input[name='openStatus']").change(function () {
+                                                var a = $("input[name='openStatus']:checked").val();
+                                                localStorage.setItem("status", a);
+                                                status = a;
+                                                var statusCommand = "0152010t0s";
+                                                var type = localStorage.getItem("type");
+                                                statusCommand = statusCommand.replace('t', type);
+                                                finalCommand = statusCommand.replace('s', a);
+                                                setDesc('s', a);
+                                                writeValue();
+                                                $('#blub').attr('src', 'image/index_dev_bulb.png');
+                                                $('#opstatus').html('开启');
+                                                $('#btn_block').animate({marginTop: '34vw'});
+                                                $('#btn_block').animate({marginTop: '0vw'});
+                                                if (status == '1') {//
+                                                    test1(angle1 > angle2 ? angle1 : angle2);
+                                                    var wId = setTimeout(function () {
+                                                        test1(angle1 > angle2 ? angle2 : angle1);
+                                                    }, 200)
+                                                    timeoutIds.push(wId);
+                                                } else {
+                                                    test1(angle1 > angle2 ? angle2 : angle1);
+                                                    var wId = setTimeout(function () {
+                                                        test1(angle1 > angle2 ? angle1 : angle2);
+                                                    }, 200)
+                                                    timeoutIds.push(wId);
+                                                    //发第二个角度
+                                                }
+                                            })
+
+                                            $('.slider_area').click(function () {
+                                                $('#finish_two').html("测试成功").removeAttr('disabled');
+                                                // $('#finish_two').removeAttr('disabled');
+                                                $('#blub').attr('src', 'image/index_dev_bulb.png');
+                                                $('#opstatus').html('开启');
+                                                $('#btn_block').animate({marginTop: '34vw'},150);
+                                                $('#btn_block').animate({marginTop: '0vw'},150);
+                                                if (status == '1') {
+                                                    test1(angle1 > angle2 ? angle1 : angle2);
+                                                    var wId = setTimeout(function () {
+                                                        test1(angle1 > angle2 ? angle2 : angle1);
+                                                    }, 200)
+                                                    timeoutIds.push(wId);
+                                                } else {
+
+                                                    test1(angle1 > angle2 ? angle2 : angle1);
+                                                    var wId = setTimeout(function () {
+                                                        test1(angle1 > angle2 ? angle1 : angle2);
+                                                    }, 200)
+                                                    timeoutIds.push(wId);
+                                                }
+                                            })
+
+                                            var query = "input[name='openStatus'][value='" + status + "']";
+                                            $(query).attr("checked", "checked");
+                                            // if (angle2 < angle1) {
+                                            //     if ('1' == status) {
+                                            //         $('.slider_area').trigger('click');
+                                            //     } else if ('0' == status) {
+                                            //         $('.slider_area').trigger('click');
+                                            //     }
+                                            // } else if (angle2 > angle1) {
+                                            //     if ('1' == status) {
+                                            //         $('.slider_area').trigger('click');
+                                            //     } else if ('0' == status) {
+                                            //         $('.slider_area').trigger('click');
+                                            //     }
+                                            // }
+                                        }, 3000);
+                                        timeoutIds.push(nId);
+                                    }
+                                } else {
+                                    openToast();
+                                    $('#clickStart').html("按住下方按钮，开始校准");
+                                    if (status == '1') {
+                                        $('#clickStep').html('校准按键上端');
+                                    } else if (status == '0') {
+                                        $('#clickStep').html('校准按键下端');
+                                    }
+                                    $("#click_desc").html("当原开关按键状态变化时，松开下方按钮...").css('color', '#2b3852').css("font-weight","").css("font-size","");
+                                    clearInterval(sId);
+                                    // up.stop();
+                                    dw.stop();
+                                    // $('#up_btn').hide();
+                                    $('#dw_btn').hide();
+                                    $('#static').show().addClass('dw_btn_img');
+                                }
+                            }
+                        }
+                    })
+                })
+
+                $("#fControl").click(function () {
+                    if (isCheck == 0) {
+                        return;
+                    }
+                    isCheck = 0;
+                    if (a == 1) {
+                        $(".picker__left").html("<i class=\"weui-picker__icon\"></i>").attr("onclick", "hide('y')");
+                        $(".weui-picker__again").html("&nbsp;")
+                        console.log("step:" + stepIndex);
+                        hidePage(stepIndex);
+                        stepIndex++;
+                        showPage(stepIndex);
+                        console.log("step:" + stepIndex);
+                        setKeyPanel();
+                        $(".start_key").each(function (index, item) {
+                            var func = "setKeyIndex('" + index + "');";
+                            $(this).attr("onclick", func);
+                        })
+                    }
+                    $("#hControl").click(function () {
+                    var body = "<div class='know'><div class=\"weui-mask weui-animate-fade-in\" style=\"top:8%\"><div style='width:100vw;height: 84vw; margin-top: 48vw' id='kimg'><img src=\"image/2.png\" style=\"width:100vw;\" ></div><button class=\"btn_xxx\" type=\"button\" onclick=\"closeKnow()\">我知道了</button></div></div>"
+                        $(".weui-picker__bd").append(body);
+                    if(isFull){
+                        // $("#kimg").css("height","87%");
+                        $(".btn_xxx").css("height","70px").css("font-size","20px");
+                    }
+                    if(isIphone && height > 810){
+                        $("#kimg").css("margin-top","51vw");
+                    }
+                    if(isIphone && width > 400){
+                        $("#kimg").css("margin-top","43vw");
+                    }
+                        hidePage(stepIndex);
+                        stepIndex = 5;
+                        showPage(stepIndex);
+                        setCurrentKey("2");
+                        var starCommand = "0155010";
+                        finalCommand = getTestCommand(starCommand);
+                        writeValue();
+                        setTimeout(function () {
+                            if (commonBackStr.indexOf("010001550000") != -1) {
+                                cState = true;
+                            }
+                        }, 500);
+                        var up = 0;
+                        var dw = 0;
+                        // alert(key_one_upvalue + " " + key_one_dwvalue + " " + key_two_upvalue + " " + key_two_dwvalue + " " + key_three_upvalue + " " + key_three_dwvalue +" 当前:"+currentKey);
+                        switch (currentKey) {
+                            case 1:
+                                // alert("上: "+key_one_upvalue+" 下： "+key_one_dwvalue)
+                                var result = getIndex2(key_one_upvalue, key_one_dwvalue);
+                                up = result[0];
+                                dw = result[1];
+                                upValue = upLevel[up];
+                                downValue = downLevel[dw];
+                                break;
+                            case 2:
+                                // alert("上: "+key_two_upvalue+" 下： "+key_two_dwvalue)
+                                var result = getIndex2(key_two_upvalue, key_two_dwvalue);
+                                up = result[0];
+                                dw = result[1];
+                                upValue = upLevel[up];
+                                downValue = downLevel[dw];
+                                break;
+                            case 3:
+                                // alert("上: "+key_three_upvalue+" 下： "+key_three_dwvalue)
+                                var result = getIndex2(key_three_upvalue, key_three_dwvalue);
+                                up = result[0];
+                                dw = result[1];
+                                upValue = upLevel[up];
+                                downValue = downLevel[dw];
+                                break;
+                        }
+                        var defaultUp = 12.5 * up;
+                        var defaultDw = 12.5 * dw;
+                        // alert("up" + defaultUp + "dw" + defaultDw);
+                        if(isDebug == "true"){
+                            defaultUp = 25;
+                            defaultDw = 25;
+                        }
+                        $("#upbox").append("<div id=\"upSlider\" class=\"weui-slider homi-slider\"><div class=\"weui-slider__inner homi-slider__inner\"><div class=\"homi-slider__track\" id=\"uptrack\"></div><div class=\"weui-slider__handler\"></div></div></div>")
+                        $("#dwbox").append("<div id=\"downSlider\" class=\"weui-slider homi-slider\"><div class=\"weui-slider__inner homi-slider__inner\"><div class=\"homi-slider__track\" id=\"dwtrack\"></div><div class=\"weui-slider__handler weui-slider__handler_b\"></div></div></div>")
+                        var txt = $("#txt").html();
+                        $("#upSlider").append(txt);
+                        $("#downSlider").append(txt);
+                        var a = defaultUp - 1;
+                        var b = defaultDw - 1;
+                        $("#uptrack").css("left",""+a+"%");
+                        $("#dwtrack").css("left",""+b+"%");
+
+                        weui.slider('#upSlider', {
+                            step: 12.5,
+                            defaultValue: defaultUp,
+                            onChange: function onChange(percent) {
+                                percent = Math.floor(percent);
+                                var level = parseInt(getNum(percent));
+                                upValue = upLevel[level];
+                                $("#rotate1").attr("transform", "rotate(" + getNum(percent) + ", 100, 100)");
+                            }
+                        });
+
+                        weui.slider('#downSlider', {
+                            step: 12.5,
+                            defaultValue: defaultDw,
+                            onChange: function onChange(percent) {
+                                percent = Math.floor(percent);
+                                $("#rotate2").attr("transform", "rotate(-" + getNum(percent) + ", 100, 100)")
+                                var level = parseInt(getNum(percent));
+                                downValue = downLevel[level];
+                            }
+                        });
+
+
+                        $("#stest").click(function () {
+                            // alert(upValue+"   "+downValue);
+                            $("#sfinish").removeAttr("disabled");
+                            test();
+                        })
+
+
+                        $("#sfinish").click(function () {
+                            $("#upSlider").remove();
+                            $("#downSlider").remove();
+                            setKeyAngles();
+                            syncPage('f');
+                        })
+                    })
+
+                })
+
+            } else {
+                $("#guide_btn").attr('disabled', 'disabled');
+                $("#fControl").attr("disabled", "disabled").unbind(); //手动不可点
+                if (isCheck == 1) {
+                    isCheck = 0;
+                }
+                return;
+            }
+        })
+    }
+
+    var setKeyIndex = function (k) {
+        $(".weui-picker__title").html("手动按键校准(高级)");
+        $("#syncchk").unbind();
+        $("#stest").unbind();
+        $("#sfinish").unbind();
+        currentKey = (parseInt(k) + 1);
+        $("#hControl").trigger("click");
+    }
+
+    function syncPage(type) {
+        save();
+        hidePage(stepIndex);
+        stepIndex = 1;
+        showPage(stepIndex);
+        $(".note").hide();
+        setKeyPanel();
+        var statusArray = [leftKeyed, middleKeyed, rightKeyed];
+        if (type == "a") {
+            angle1 = 0;
+            angle2 = 0;
+            $('#start_btn').html('完成');
+            $('.weui-picker__again').html("").removeAttr("onclick");
+        } else {
+            $("#sfinish").attr("disabled", "disabled");
+        }
+        $('#finish_ara').show();
+        console.log(statusArray);
+        console.log(key_one_upvalue + " " + key_one_dwvalue + " " + key_two_upvalue + " " + key_two_dwvalue + " " + key_three_upvalue + " " + key_three_dwvalue +" 当前:"+currentKey)
+        // alert(statusArray[0]+"  "+statusArray[1]+"  "+ statusArray[2]);
+
+        $('.start_key').each(function (index, item) {
+            if (statusArray[parseInt(index)] == true) {
+                $(this).css('color', '#00B871');
+                $(this).children('.start_img').attr('src', 'image/switch_test_icon_middle_s@3x.png');
+                $(this).html($(this).html().toString().replace("选择","完成"));
+                // $(this).removeAttr('onclick');    //移除点击事件
+            } else {
+                $(this).css('color', '#0082ff');
+                $(this).children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+                $(".slider_area").unbind();
+                var key = parseInt(index) + 1;
+                var func = "";
+                if (type == "a") {
+                    func = "setCurrKey('" + key + "','1')";
+                } else {
+                    key -= 1;
+                    func = "setKeyIndex('" + key + "','1')";
+                }
+                $(this).attr("onclick", func);
+            }
+        })
+        if (keyNum != 1) {
+            $('#sync').hide();
+            if (keyNum == 3) {
+                if ((leftKeyed && !middleKeyed && !rightKeyed) ||
+                    (!leftKeyed && middleKeyed && !rightKeyed) ||
+                    (!leftKeyed && !middleKeyed && rightKeyed)) {//只有一个按键被校准时
+                    $('#sync').show();
+                } else if ((leftKeyed && middleKeyed && !rightKeyed)) {//1.2校准成功
+                    if (key_one_upvalue == key_two_upvalue && key_one_dwvalue == key_two_dwvalue) {
+                        $('#sync').show();
+                    }
+                } else if ((leftKeyed && !middleKeyed && rightKeyed)) {//1.3校准成功
+                    if (key_one_upvalue == key_three_upvalue && key_one_dwvalue == key_three_dwvalue) {
+                        $('#sync').show();
+                    }
+                } else if ((!leftKeyed && middleKeyed && rightKeyed)) {//2.3校准成功
+                    if (key_two_upvalue == key_three_upvalue && key_two_dwvalue == key_three_dwvalue) {
+                        $('#sync').show();
+                    }
+                } else if (leftKeyed && middleKeyed && rightKeyed) {
+                    $('#panel_desc').html('全部校准完成');
+                    $('#panel_txt').html('点击完成保存校准结果，然后尝试使用天猫精灵<br/>控制开关精灵吧。');
+                    // $("#start_btn").unbind();
+                    // $("#hControl").unbind();
+                    // $('#start_btn').attr('onclick', 'syncAngle();');
+                }
+            } else if (keyNum == 2) {
+                if ((leftKeyed && !rightKeyed) || (!leftKeyed && rightKeyed)) {//只有一个按键被校准时
+                    $('#sync').show();
+                } else if (leftKeyed && rightKeyed) {
+                    $('#panel_desc').html('全部校准完成');
+                    $('#panel_txt').html('点击完成保存校准结果，然后尝试使用天猫精灵<br/>控制开关精灵吧。');
+                    // $("#start_btn").unbind();
+                    // $("#hControl").unbind();
+                    // $('#start_btn').attr('onclick', 'syncAngle();');
+                }
+            }
+            var value = $("input[name='syncchk']:checked").val();
+            if(value == "1"){
+                $('#syncchk').trigger("click");//.trigger("change");
+                $('#panel_desc').html('选择要校准的按键');
+            }
+            console.log("2612--->"+value);
+            $('#syncchk').change(function () {
+                var value = $("input[name='syncchk']:checked").val();
+                console.log("2639--->调用了"+value)
+                if (value == '1') {
+                    $('#panel_desc').html('即将同步到其它按键');
+                    $('.start_key').each(function (index, item) {
+                        $(this).children('.start_img').attr('src', 'image/switch_test_icon_middle_s@3x.png');
+                        $(this).css('color','#00B871');
+                        $(this).html($(this).html().toString().replace("选择","完成"));
+                        // $(this).removeAttr('onclick');
+                        // $(this).removeClass('start_key_disable')
+                    })
+                } else {
+                    $('#panel_desc').html('选择要校准的按键');
+                    $('#panel_txt').html('按键校准过程共分三步，大约需要30秒。</br>请按屏幕提示进行操作。');
+                    $('.start_key').each(function (index, item) {
+                        if (statusArray[parseInt(index)] != true) {
+                            $(this).css('color', '#0082ff');
+                            $(this).children('.start_img').attr('src', 'image/switch_choose_button_n.png');
+                            $(this).html($(this).html().toString().replace("完成","选择"));
+                            var key = parseInt(index) + 1;
+                            // var func = "setCurrKey('" + key + "','1')";
+                            var func = "";
+                            if (type == "a") {
+                                func = "setCurrKey('" + key + "','1')";
+                            } else {
+                                key -= 1;
+                                func = "setKeyIndex('" + key + "','1')";
+                            }
+                            console.log(func);
+                            $(this).attr("onclick", func);
+                        }
+                    })
+                }
+                if (keyNum == 3) {
+                    if (value == "1" || (leftKeyed && middleKeyed && rightKeyed)) {
+                        // $('#start_btn').attr('onclick', 'syncAngle();');
+                    }
+                } else if (keyNum == 2) {
+                    if (value == "1" || (leftKeyed && rightKeyed)) {
+                        // $('#start_btn').attr('onclick', 'syncAngle();');
+                    }
+                }
+            })
+        } else {
+            // $("#start_btn").unbind();
+            $("#hControl").unbind();
+        }
+
+    }
+
+    function syncAngle() {
+        console.log("同步完成");
+        var value = $("input[name='syncchk']:checked").val();
+        var isSync = false;
+        if (value == '1') {
+            key_one_upvalue = upValue;
+            key_one_dwvalue = downValue;
+            key_two_upvalue = upValue;
+            key_two_dwvalue = downValue;
+            key_three_upvalue = upValue;
+            key_three_dwvalue = downValue;
+            isSync = true;
+        }
+        finish(isSync);
+    }
+
+    function play() {
+        var vedio = document.getElementById("vedio");
+        $("#pick").hide();
+        $(vedio).show();
+        vedio.play();
+    }
+
+    function areaClick(t) {
+        if (t == '1') {
+            $("input:radio[name='keystatus'][value='1']").removeAttr('checked');
+            $("input:radio[name='keystatus'][value='0']").attr('checked', 'true');
+        } else if (t == '2') {
+            $("input:radio[name='keystatus'][value='0']").removeAttr('checked');
+            $("input:radio[name='keystatus'][value='1']").attr('checked', 'true');
+        } else if (t == '3') {
+            $("input:radio[name='keytype'][value='2']").removeAttr('checked');
+            $("input:radio[name='keytype'][value='1']").attr('checked', 'true');
+        } else if (t == '4') {
+            $("input:radio[name='keytype'][value='1']").removeAttr('checked');
+            $("input:radio[name='keytype'][value='2']").attr('checked', 'true');
+        }
+        console.log($("input[name='keystatus']:checked").val());
+    }
+
+    function closeKnow(){
+        $(".know").remove();
+    }
+
+    function endFunc() {
+        var vedio = document.getElementById("vedio");
+        vedio.currentTime = 0;
+        vedio.pause();
+        $(vedio).hide();
+        $("#pick").show();
+    }
+
+    function guide() {
+        if (isInited == "false") {
+            $("#content").show();
+            $("#macspan").show();
+            setType();
+        }
+        $("#jump").hide();
+        $(".no_desc").hide();
+        $("#jchk").hide();
+        var vedio = document.getElementById("vedio");
+        vedio.currentTime = 0;
+        vedio.pause();
+        $(vedio).hide();
+        $("#pick").show();
+    }
+
+    function setCurrKey(k, t) {
+        switch (k){
+            case "1":
+                $('#leftkey').children('.start_img').attr('src', 'image/switch_choose_button_p.png');
+                break;
+            case "2":
+                $('#middlekey').children('.start_img').attr('src', 'image/switch_choose_button_p.png');
+                break;
+            case "3":
+                $('#rightkey').children('.start_img').attr('src', 'image/switch_choose_button_p.png');
+                break;
+            default:
+        }
+        $("#syncchk").unbind();
+        $("input[name='openStatus']").unbind();
+        $('#finish_two').html("点击上方按键，验证结果").attr('disabled', 'disabled');
+        currentKey = parseInt(k);
+        if (t != undefined && t != null && t != "") {
+            console.log("2730--->"+stepIndex+"currKey"+currentKey);
+            if(stepIndex != 1){
+                hidePage(stepIndex);
+                stepIndex = 1;
+            }
+            $("#start_btn").trigger('click');
+        } else {
+            $("#start_btn").trigger('click');
+        }
+    }
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+    function back() {
+        scanCount = 1;
+        if (isConnected) {
+            window.WindVane.call('WVBluetooth', 'disconnect', {deviceId: commonDeviceId}, function (e) {
+                window.WindVane.call('AppModel', 'goBack', {});
+            }, function (e) {
+                weui.alert('蓝牙设备断开连接失败', function () {
+                    window.WindVane.call('AppModel', 'goBack', {})
+                });
+            });
+        } else {
+            window.WindVane.call('AppModel', 'goBack', {});
+        }
+    }
+
+    function closeDialog() {
+        $('.weui-mask').remove();
+        $('.weui-dialog').remove();
+    }
+
+    function openError() {
+        window.WindVane.call('WVBluetooth', 'stopScan', {}, function (e){
+        }, function (e)  {
+        });
+        var body = '<div class="weui-mask"><div class="weui-dialog" style="top: 78%"><div class="weui-dialog__hd"><span class="weui-dialog__title">无法连接设备</span></div><div class="weui-dialog__bd level-left" style="text-align: left;padding: 4px 15px 30px 24px; font-size: 14px;line-height: 20px;color: #7383A2">请尝试以下操作：</br>1.请确认蓝牙设备已开机，并处于附近。</br>2.请关闭手机蓝牙，再重新开启。（尤其是安卓设备）。</br>3.请将蓝牙设备重启。</div><div class="weui-dialog__ft"><a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" onclick="scanDevice();">再试一次</a><a href="javascript:;" onclick="back()" class="weui-dialog__btn weui-dialog__btn_primary">返回</a></div></div></div>'
+        $("body").append(body);
+    }
+
+    function setKeyAngles() {
+        if (keyNum == 1) {
+            key_one_upvalue = upValue;
+            key_one_dwvalue = downValue;
+            leftKeyed = true;
+        } else if (keyNum == 2) {
+            if (currentKey == 1) {
+                key_one_upvalue = upValue;
+                key_one_dwvalue = downValue;
+                leftKeyed = true;
+            } else if (currentKey == 2) {
+                key_two_upvalue = upValue;
+                key_two_dwvalue = downValue;
+                rightKeyed = true;
+            }
+        } else if (keyNum == 3) {
+            if (currentKey == 1) {
+                key_one_upvalue = upValue;
+                key_one_dwvalue = downValue;
+                leftKeyed = true;
+            } else if (currentKey == 2) {
+                key_two_upvalue = upValue;
+                key_two_dwvalue = downValue;
+                middleKeyed = true;
+            } else if (currentKey == 3) {
+                key_three_upvalue = upValue;
+                key_three_dwvalue = downValue;
+                rightKeyed = true;
+            }
+        }
+    }
+    function openToast() {
+        // var content = '<div class="weui-toast__own"><div class="weui-toast__content">请按住下方按钮开始</div></div>'
+        // $("body").append(content);
+        weui.alert("<span style='line-height: 28px'> 请<b>按住</b>按钮，当原按键状态变化时，方可松手。</span>",function () {
+        })
+        var id = setTimeout(function () {
+            $(".weui-toast__own").remove();
+            clearTimeout(id);
+        }, 1500);
+    }
+
+    //设置阈值与频率
+    function setFrequency(c, f) {
+        finalCommand = "01d101" + int2HexStr(parseInt(c)) + dec2hex(parseInt(f));
+        // alert(finalCommand);
+        writeValue();
+        setTimeout(function () {
+            // alert(commonBackStr);
+        }, 100);
+    }
+
+    function goBack() {
+        window.WindVane.call('AppModel', 'goBack', {})
+    }
+</script>
+</body>
+</html>

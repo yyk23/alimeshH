@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="css/weui.min.css" rel="stylesheet">
+    <!--<link href="css/homi.css" rel="stylesheet">-->
+    <script src="js/weui.min.js"></script>
+    <script src="js/jquery.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+
+<script>
+
+    $(function () {
+
+        weui.picker([
+            {
+                label: '1',
+                value: '1'
+            }, {
+                label: '2',
+                value: '2'
+            }, {
+                label: '3',
+                value: '3'
+            }
+        ], [
+            {
+                label: 'A',
+                value: 'A'
+            }, {
+                label: 'B',
+                value: 'B'
+            }, {
+                label: 'C',
+                value: 'C'
+            }
+        ], {
+            defaultValue: ['3', 'A'],
+            onChange: function (result) {
+                console.log(result);
+            },
+            onConfirm: function (result) {
+                console.log(result);
+            },
+            id: 'multiPickerBtn'
+        });
+        $('.homi-picker_hd').html("开启时间")
+    })
+
+</script>
+</body>
+</html>

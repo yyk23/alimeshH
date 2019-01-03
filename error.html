@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1></h1>
+    <input type="text" v-model="newItem" v-on:keyup.enter="addNew" />
+    <ul>
+        <li v-for="item in items" :key="item.label" @click="clickFunc(item)" v-bind:class="{red:item.status}">{{item.label}}</li>
+    </ul>
+</div>
+<script type="application/javascript">
+    var vm  = new Vue({
+        el:"#app",
+        data: {
+            items:[],
+            newItem:""
+        },
+        methods :{
+            addNew:function () {
+                let item  = {
+                    label:this.newItem,
+                    status:false
+                }
+                this.items.push(item)
+                this.newItem = "";
+            },
+            clickFunc:function (item) {
+                console.log(item.status);
+                item.status = !item.status;
+            }
+        },
+        watch: {
+            items:function () {
+                console.log(this.items);
+            }
+        }
+    })
+</script>
+</body>
+</html>
